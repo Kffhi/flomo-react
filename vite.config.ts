@@ -16,6 +16,7 @@ export default defineConfig({
                 modifyVars: {
                     'primary-color': '#30cf79'
                 },
+                additionalData: `@import '@/styles/variables.less';`,
                 javascriptEnabled: true
             }
         }

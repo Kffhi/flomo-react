@@ -1,1 +1,48 @@
 //@primary-color: #30cf79; // 全局主色
+@main-color: #30cf79;
+
+@background-main-color: #fafafa;
+@background-hover-color: #efefef;
+
+@text-main-color: #9d9d9d;
+@text-tag-color: #5783f7;
+@text-gold-color: #ded1b7;
+
+@heat-border-color: #55bb8e;
+@heat-lightGreen-color: #d3ecdd;
+@heat-darkGreen-color: #55bb8e;
+
+@editor-bg-color: #ffffff;
+@editor-border-color: #e8e8e8;
+@editor-tag-color: #5783f7;
+
+@white-color: #ffffff;
+
+.textOverflow(@width: 100%, @display: block) {
+    width: @width;
+    display: @display;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.flex(@justify-content: flex-start, @align-center: center) {
+    display: flex;
+    justify-content: @justify-content;
+    align-items: @align-center;
+}
+
+.boxPadding(@padding: 0 15px) {
+    box-sizing: border-box;
+    padding: @padding;
+}
+
+.ellipsis(@width: 100%) {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    width: @width;
+    display: inline-block;
+}
+

@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "antd": "^4.22.7",
+        "classnames": "^2.3.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
     },
@@ -43,7 +44,7 @@
         "vite": "^2.8.0"
     },
     "lint-staged": {
-        "*.{js,ts}": "eslint --fix"
+        "*.{js,ts,jsx,tsx}": "eslint --fix"
     },
     "config": {
         "commitizen": {
