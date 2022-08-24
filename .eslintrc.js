@@ -1,3 +1,8 @@
+const a11yOff = Object.keys(require('eslint-plugin-jsx-a11y').rules).reduce((acc, rule) => {
+    acc[`jsx-a11y/${rule}`] = 'off'
+    return acc
+}, {})
+
 module.exports = {
     env: {
         browser: true,
@@ -27,6 +32,7 @@ module.exports = {
         }
     },
     rules: {
+        ...a11yOff,
         indent: ['error', 4, { SwitchCase: 1 }],
         'import/extensions': 'off',
         'import/no-unresolved': 'off', // import + ts解析报错

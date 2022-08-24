@@ -1,0 +1,49 @@
+.heatMap {
+    width: 100%;
+    height: 100%;
+    .flex(flex-center, flex-center);
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .dayBox {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(7, 1fr);
+        grid-auto-flow: column;
+        gap: 4px;
+
+        .dayItem {
+            background: #efefef;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+
+            &.today {
+                border: 1px solid @heat-border-color;
+            }
+
+            &.lightGreen {
+                background-color: @heat-lightGreen-color;
+            }
+
+            &.darkGreen {
+                background-color: @heat-darkGreen-color;
+            }
+        }
+    }
+
+    .monthBox {
+        height: 16px;
+        margin-top: 10px;
+        font-size: 12px;
+        .flex(space-between);
+
+        .monthItem {
+            &.notExist {
+                display: none;
+            }
+        }
+    }
+}

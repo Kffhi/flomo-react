@@ -1,6 +1,11 @@
 import React from 'react'
 import ClassNames from 'classnames'
-import { Button } from 'antd'
+import SearchHeader from '@/components/SearchHeader'
+import EditorWrap from '@/components/EditorWrap'
+import MemosWrap from '@/components/MemosWrap'
+import UserHeader from '@/components/UserHeader'
+import TheStat from '@/components/TheStat'
+import SliderBarUl from '@/components/SliderBarUl'
 
 import './style.less'
 
@@ -9,9 +14,15 @@ const App: React.FC = () => {
         <div className={ClassNames('theLayout')}>
             <div className={ClassNames('main')}>
                 <div className={ClassNames('sliderWrap')}>
-                    <Button type="primary">test</Button>
+                    <UserHeader />
+                    <TheStat />
+                    <SliderBarUl />
                 </div>
-                <div className={ClassNames('mainWrap')}>{222}</div>
+                <div className={ClassNames('mainWrap')}>
+                    <SearchHeader />
+                    <EditorWrap />
+                    <MemosWrap />
+                </div>
             </div>
         </div>
     )

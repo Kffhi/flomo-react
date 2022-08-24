@@ -1,0 +1,23 @@
+.sliderBarUl {
+    width: 100%;
+    margin: 9px 0 18px;
+    font-size: 14px;
+    color: @text-main-color;
+
+    li {
+        line-height: 36px;
+        padding-left: 17px;
+        cursor: pointer;
+        .flex();
+
+        .menuIcon {
+            margin-right: 5px;
+        }
+
+        &.selected {
+            background-color: @main-color;
+            color: @white-color;
+            border-radius: 5px;
+        }
+    }
+}

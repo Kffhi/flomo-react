@@ -1,0 +1,28 @@
+.userHeader {
+    width: 100%;
+    height: 65px;
+    padding: 0 15px;
+    .flex(space-between);
+
+    .left {
+        height: 65px;
+        font-weight: bold;
+        font-size: 14px;
+        .flex();
+    }
+
+    .iconWrap {
+        width: 50px;
+        cursor: pointer;
+        .flex(space-between);
+
+        .iconStyle {
+            color: @icon-main-color;
+            font-size: 18px;
+
+            &:hover{
+                color: @main-color;
+            }
+        }
+    }
+}

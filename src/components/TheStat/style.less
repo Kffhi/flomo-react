@@ -1,0 +1,36 @@
+.theStat {
+    width: 100%;
+    height: 206px;
+    margin-bottom: 20px;
+    .flex(flex-start, flex-start);
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .dataShow {
+        .flex(space-between);
+        flex-direction: row;
+        width: 100%;
+        height: 48px;
+        padding: 0 16px;
+        color: @text-main-color;
+
+        .value {
+            font-weight: bold;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .key {
+            font-size: 10px;
+            line-height: 2;
+        }
+    }
+
+    .heatMapWrap {
+        width: 100%;
+        padding: 0 16px;
+        margin-top: 10px;
+        .flex(center);
+        flex: 1;
+    }
+}
