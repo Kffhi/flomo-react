@@ -1,14 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ClassNames from 'classnames'
+import { Tooltip } from 'antd'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { getDateList } from '@/utils/date'
+import { dayItemType, dayMapType, heatMapType } from '@/types/baseInfo'
+import { fetchHeatMap, setHeatMap } from '@/store/reducers/baseInfo'
 
 import './style.less'
 
 const HeatMap: React.FC = () => {
+    const dispatch = useAppDispatch()
+    const heatMap: heatMapType = useAppSelector(state => state.baseInfo.heatMap)
+
+    const { dayList: day, monthList: month } = getDateList()
+    const [dayList, setDayList] = useState(day) // 日期列表
+    const [monthList, setMonthList] = useState(month) // 月份列表
+
+    // 将热力数据中的次数记录至dayList
+    function completeDayTimes(dayList: dayItemType[], heatMap: dayMapType): dayItemType[] {
+        const arr = dayList.map(day => {
+            const o = heatMap.get(day.date)
+            if (o) {
+                day.times = o.times
+            }
+            return day
+        })
+        return arr as dayItemType[]
+    }
+
+    useEffect(() => {
+        fetchHeatMap().then(data => {
+            dispatch(setHeatMap(data))
+        })
+    }, [])
+
+    useEffect(() => {
+        setDayList(completeDayTimes(dayList, new Map(heatMap)))
+    }, [heatMap])
+
     return (
-        <div className="heatMap">
-            <div className="dayBox" />
-            <div className="monthBox">
-                <div className="monthItem">月</div>
+        <div className={ClassNames('heatMap')}>
+            <div className={ClassNames('dayBox')}>
+                {dayList.map(day => {
+                    return (
+                        <Tooltip title={`${day.date} ${day.times}次提交`} key={day.date} mouseEnterDelay={0.05} mouseLeaveDelay={0.05}>
+                            <div className={ClassNames('dayItem', { today: day.isToday }, { lightGreen: day.times > 0 && day.times < 8 }, { darkGreen: day.times >= 8 })} />
+                        </Tooltip>
+                    )
+                })}
+            </div>
+            <div className={ClassNames('monthBox')}>
+                {monthList.map(month => {
+                    return (
+                        <div className={ClassNames('monthItem', { notExist: month.column === -1 })} key={month.value}>
+                            {month.value}月
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

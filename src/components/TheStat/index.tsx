@@ -1,16 +1,14 @@
 import React from 'react'
 import ClassNames from 'classnames'
+import { useAppSelector } from '@/store/hooks'
+import { userInfoType } from '@/types/baseInfo'
 import HeatMap from '@/components/HeatMap'
 
 import './style.less'
 
-const userInfo = {
-    memoNumber: 81,
-    tagNumber: 24,
-    duration: 365
-}
-
 const TheStat: React.FC = () => {
+    const userInfo: userInfoType = useAppSelector(state => state.baseInfo.userInfo)
+
     return (
         <div className={ClassNames('theStat')}>
             <div className={ClassNames('dataShow')}>

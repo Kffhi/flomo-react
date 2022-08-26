@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { dayItemType, monthItemType } from '@/types/state'
+import { dayItemType, monthItemType } from '@/types/baseInfo'
 
 /**
  * 获取距今天特定时间间隔的日期列表

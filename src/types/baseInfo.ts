@@ -1,4 +1,4 @@
-export interface USERINFO_TYPE {
+export interface userInfoType {
     userName: string
     duration: number
     tagNumber: number
@@ -11,8 +11,12 @@ export interface USERINFO_TYPE {
 export interface dayItemType {
     date: string
     times: number
-    isToday: boolean
+    isToday?: boolean
 }
+
+export type heatMapItemType = [string, dayItemType]
+
+export type heatMapType = heatMapItemType[]
 
 export interface monthItemType {
     value: number

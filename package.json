@@ -11,16 +11,21 @@
         "lint-fix": "eslint --fix ./src --ext .js,.ts,.jsx,.tsx"
     },
     "dependencies": {
+        "@reduxjs/toolkit": "^1.8.5",
         "antd": "^4.22.7",
+        "axios": "^0.27.2",
         "classnames": "^2.3.1",
         "dayjs": "^1.11.5",
+        "qs": "^6.11.0",
         "react": "^17.0.2",
-        "react-dom": "^17.0.2"
+        "react-dom": "^17.0.2",
+        "react-redux": "^8.0.2"
     },
     "devDependencies": {
         "@commitlint/cli": "^16.2.3",
         "@commitlint/config-conventional": "^16.2.1",
         "@types/node": "^18.7.11",
+        "@types/qs": "^6.9.7",
         "@types/react": "^17.0.33",
         "@types/react-dom": "^17.0.10",
         "@typescript-eslint/eslint-plugin": "^5.34.0",
