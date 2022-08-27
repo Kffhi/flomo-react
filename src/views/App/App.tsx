@@ -6,6 +6,7 @@ import MemosWrap from '@/components/MemosWrap'
 import UserHeader from '@/components/UserHeader'
 import TheStat from '@/components/TheStat'
 import SliderBarUl from '@/components/SliderBarUl'
+import TagsTree from '@/components/TagsTree'
 
 import './style.less'
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
                     <UserHeader />
                     <TheStat />
                     <SliderBarUl />
+                    <TagsTree />
                 </div>
                 <div className={ClassNames('mainWrap')}>
                     <SearchHeader />

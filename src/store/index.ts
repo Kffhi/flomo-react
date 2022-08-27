@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import baseInfoReduce from '@/store/reducers/baseInfo'
+import tagReduce from '@/store/reducers/tag'
 
 export const store = configureStore({
     reducer: {
-        baseInfo: baseInfoReduce
+        baseInfo: baseInfoReduce,
+        tagsTree: tagReduce
     }
 })
 
