@@ -49,6 +49,7 @@ module.exports = {
         'no-restricted-syntax': 'off',
         'react/jsx-filename-extension': 'off',
         'import/no-extraneous-dependencies': 'off',
-        'react/function-component-definition': 'off'
+        'react/function-component-definition': 'off',
+        'react/jsx-props-no-spreading': 'off'
     }
 }
