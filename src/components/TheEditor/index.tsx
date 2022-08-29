@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ClassNames from 'classnames'
 import { createEditor, Editor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -10,8 +10,31 @@ import useTagSelect from '@/hooks/useTagSelect'
 
 import './style.less'
 
-const MainEditor: React.FC = () => {
+const TheEditor: React.FC = () => {
     const [value, setValue] = useState([
+        {
+            type: 'paragraph',
+            children: [
+                {
+                    text: '#标签1 ',
+                    tag: true
+                },
+                {
+                    text: ' '
+                },
+                {
+                    text: '#标签2 ',
+                    tag: true
+                },
+                {
+                    text: ' '
+                },
+                {
+                    text: '#标签3 ',
+                    tag: true
+                }
+            ]
+        },
         {
             type: 'paragraph',
             children: [
@@ -72,7 +95,18 @@ const MainEditor: React.FC = () => {
             type: 'paragraph',
             children: [
                 {
-                    text: '普通文本'
+                    text: '普通'
+                },
+                {
+                    text: '#文本内标签',
+                    tag: true
+                },
+                {
+                    text: '文本'
+                },
+                {
+                    text: '#一级标签/二级标签/最多三级',
+                    tag: true
                 }
             ]
         },
@@ -184,14 +218,16 @@ const MainEditor: React.FC = () => {
     }, [])
 
     return (
-        <div className={ClassNames('editor')} ref={editorRef}>
-            <TagSelect editor={editor} value={value} editorRef={editorRef} />
-            <Slate editor={editor} value={value} onChange={value => handleValueChange(value)}>
-                <Editable className="editableWrap" placeholder="撒，来细数你的想法吧！" renderLeaf={renderLeaf} renderElement={renderElement} />
-                <ToolBar handleSubmitSend={handleSubmitSend} />
-            </Slate>
+        <div className={ClassNames('theEditorWrap')}>
+            <div className={ClassNames('editor')} ref={editorRef}>
+                <TagSelect editor={editor} value={value} editorRef={editorRef} />
+                <Slate editor={editor} value={value} onChange={value => handleValueChange(value)}>
+                    <Editable className="editableWrap" placeholder="撒，来细数你的想法吧！" renderLeaf={renderLeaf} renderElement={renderElement} />
+                    <ToolBar handleSubmitSend={handleSubmitSend} />
+                </Slate>
+            </div>
         </div>
     )
 }
 
-export default MainEditor
+export default TheEditor

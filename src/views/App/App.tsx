@@ -1,7 +1,7 @@
 import React from 'react'
 import ClassNames from 'classnames'
 import SearchHeader from '@/components/SearchHeader'
-import EditorWrap from '@/components/EditorWrap'
+import TheEditor from '@/components/TheEditor'
 import MemosWrap from '@/components/MemosWrap'
 import UserHeader from '@/components/UserHeader'
 import TheStat from '@/components/TheStat'
@@ -22,7 +22,7 @@ const App: React.FC = () => {
                 </div>
                 <div className={ClassNames('mainWrap')}>
                     <SearchHeader />
-                    <EditorWrap />
+                    <TheEditor />
                     <MemosWrap />
                 </div>
             </div>
