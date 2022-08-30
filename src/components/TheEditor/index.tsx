@@ -98,15 +98,21 @@ const TheEditor: React.FC = () => {
                     text: '普通'
                 },
                 {
-                    text: '#文本内标签',
+                    text: '#文本内标签 ',
                     tag: true
+                },
+                {
+                    text: ' '
                 },
                 {
                     text: '文本'
                 },
                 {
-                    text: '#一级标签/二级标签/最多三级',
+                    text: '#一级标签/二级标签/最多三级 ',
                     tag: true
+                },
+                {
+                    text: ' '
                 }
             ]
         },
