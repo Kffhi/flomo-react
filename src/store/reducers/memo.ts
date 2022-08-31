@@ -25,10 +25,17 @@ const memoSlice = createSlice({
     reducers: {
         setMemoList(state, action: { payload: memoItemType[] }) {
             state.memoList = action.payload
+        },
+        updateMemoEditStatus(state, action: { payload: { id: string; isEdit: boolean | undefined } }) {
+            state.memoList.forEach(item => {
+                if (item.id === action.payload.id) {
+                    item.isEdit = action.payload.isEdit
+                }
+            })
         }
     }
 })
 
-export const { setMemoList } = memoSlice.actions
+export const { setMemoList, updateMemoEditStatus } = memoSlice.actions
 
 export default memoSlice.reducer

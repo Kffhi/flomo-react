@@ -3,18 +3,23 @@
     height: auto;
     overflow: hidden;
     padding: 0 15px 10px;
+    cursor: pointer;
 
     .memoItemWrap {
         width: 100%;
         min-height: 75px; // TODO:
         height: auto;
-        margin: 5px 0;
-        padding: 15px;
+        margin: 8px 0;
+        padding: 0;
         background: @white-color;
         border-radius: 6px;
 
         &:hover{
             box-shadow: 0 2px 16px @editor-shadow-color;
+        }
+
+        &.readonly{
+            padding: 15px;
         }
 
         .headerWrap{
