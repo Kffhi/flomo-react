@@ -25,10 +25,12 @@
             width: 640px;
             height: 100%;
             margin-left: 10px;
-            overflow: hidden;
-            .flex(flex-start, flex-start);
-            flex-wrap: wrap;
-            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 .theEditorWrap {
     width: 100%;
     padding: 10px 15px;
-    min-height: 150px; // TODO: 最大最小高度最好按照行高来
-    max-height: 350px;
+    min-height: 105px; // TODO: 最大最小高度最好按照行高来
+    max-height: 650px;
     height: auto;
 
     .editor {
@@ -13,6 +13,7 @@
         border: 1px solid @editor-border-color;
         position: relative;
 
+
         &:focus {
             border-color: @editor-focused-border-color;
             box-shadow: 0 2px 16px @editor-shadow-color;
@@ -20,6 +21,7 @@
 
         .editableWrap {
             height: 100%;
+            max-height: 575px;
             overflow-y: auto;
             line-height: 20px;
             font-size: 14px;

@@ -47,7 +47,3 @@ export function getDateList(duration: number = 12 * 7) {
     }
     return { dayList, monthList }
 }
-
-export default {
-    getDateList
-}
