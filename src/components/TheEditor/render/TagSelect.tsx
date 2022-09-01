@@ -1,27 +1,31 @@
 import React, { useEffect, useRef } from 'react'
 import ClassNames from 'classnames'
-import useTagSelect from '@/hooks/useTagSelect'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { setTagIsShow } from '@/store/reducers/editor'
 
 type propsType = {
     editor: any
-    value: any
     editorRef: any
 }
 
 const TagSelect: React.FC<propsType> = props => {
-    const { editor, value, editorRef } = props
+    const { editor, editorRef } = props
     const ref = useRef<any>(null)
+    const dispatch = useAppDispatch()
+    const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
 
     useEffect(() => {
         const el: any = ref.current
+        // const { selection } = editor
 
         if (!el) return
 
-        if (!useTagSelect.isShow()) {
+        if (!isShowTagSelect) {
             el.removeAttribute('style')
             return
         }
 
+        // if (selection) {
         const domSelection = window.getSelection()
         const domRange = domSelection?.getRangeAt(0)
         const rect = domRange?.getBoundingClientRect() || { top: 0, right: 0 }
@@ -31,12 +35,13 @@ const TagSelect: React.FC<propsType> = props => {
         el.style.opacity = '1'
         el.style.top = `${rect.top + window.scrollY - editorRect.top + 7}px`
         el.style.left = `${rect.right + window.scrollX - editorRect.left + 5}px`
-    }, [value]) // 编辑区内容是否有修改
+        // }
+    }) // 编辑区内容是否有修改
 
     const handleSelectTag = (data: any) => {
         editor.insertText(`${data.value} `)
         editor.removeMark('tag')
-        useTagSelect.setVisibility(false)
+        dispatch(setTagIsShow(false))
     }
 
     return (

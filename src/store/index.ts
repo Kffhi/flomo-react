@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import baseInfoReduce from '@/store/reducers/baseInfo'
 import tagReduce from '@/store/reducers/tag'
 import memoReduce from '@/store/reducers/memo'
+import editorReduce from '@/store/reducers/editor'
 
 export const store = configureStore({
     reducer: {
         baseInfo: baseInfoReduce,
         tagsTree: tagReduce,
-        memo: memoReduce
+        memo: memoReduce,
+        editor: editorReduce
     }
 })
 

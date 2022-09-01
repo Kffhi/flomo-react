@@ -22,7 +22,7 @@ export const fetchTagsTree = async () => {
 }
 
 const tagSlice = createSlice({
-    name: 'baseInfo',
+    name: 'tagsTree',
     initialState,
     reducers: {
         setTagTree(state, action: { payload: TagsTreeType }) {

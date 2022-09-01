@@ -11,7 +11,13 @@ import TagsTree from '@/components/TagsTree'
 
 import './style.less'
 
-const initValue: Descendant[] = [{ text: '' }]
+const initValue: Descendant[] = [
+    {
+        // @ts-ignore
+        type: 'paragraph',
+        children: [{ text: '' }]
+    }
+]
 
 const App: React.FC = () => {
     return (

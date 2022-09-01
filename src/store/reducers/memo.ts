@@ -20,7 +20,7 @@ export const fetchMemoList = async () => {
 }
 
 const memoSlice = createSlice({
-    name: 'baseInfo',
+    name: 'memo',
     initialState,
     reducers: {
         setMemoList(state, action: { payload: memoItemType[] }) {
