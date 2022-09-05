@@ -79,16 +79,12 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
     const handleDBClick = (event: MouseEvent) => {
         if (readonly) {
             dispatch(updateMemoEditStatus({ id: memoId as string, isEdit: true }))
-            setTimeout(() => {
-                ReactEditor.focus(editor)
-                ReactEditor.isFocused(editor)
-                console.log('---', focused, ReactEditor.isFocused(editor))
-            }, 1000)
+            ReactEditor.focus(editor)
         }
     }
 
     return (
-        <div className={ClassNames('theEditorWrap', { readonly })} onDoubleClick={handleDBClick}>
+        <div className={ClassNames('theEditorWrap', { readonly })}>
             <div className={ClassNames('editor')} ref={editorRef}>
                 <TagSelect editor={editor} editorRef={editorRef} />
                 <Slate editor={editor} value={value} onChange={value => handleValueChange(value)}>
@@ -99,6 +95,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
                         renderElement={renderElement}
                         readOnly={readonly}
                         onKeyDown={handleMouseDown}
+                        onDoubleClick={handleDBClick}
                     />
                     {!readonly && <ToolBar handleSubmitSend={handleSubmitSend} />}
                 </Slate>
