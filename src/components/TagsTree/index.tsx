@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import ClassNames from 'classnames'
 import { Tree, Dropdown, Menu } from 'antd'
 import { EllipsisOutlined } from '@ant-design/icons'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { fetchTagsTree, setTagTree } from '@/store/reducers/tag'
+import { useAppSelector } from '@/store/hooks'
 import { dropMenuItemType, TagsNode, TagsTreeType } from '@/types/tags'
 
 import './style.less'
@@ -57,14 +56,7 @@ const renderTreeNode = (node: TagsNode) => {
 }
 
 const TagsTree: React.FC = () => {
-    const dispatch = useAppDispatch()
     const tagsTree: TagsTreeType = useAppSelector(state => state.tagsTree.tags)
-
-    useEffect(() => {
-        fetchTagsTree().then(data => {
-            dispatch(setTagTree(data))
-        })
-    }, [])
 
     return (
         <div className={ClassNames('tagsTree')}>

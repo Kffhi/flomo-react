@@ -3,11 +3,10 @@ import ClassNames from 'classnames'
 import { EllipsisOutlined } from '@ant-design/icons'
 import { Dropdown, Menu } from 'antd'
 import dayjs from 'dayjs'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { fetchMemoList, setMemoList, updateMemoEditStatus } from '@/store/reducers/memo'
+import { Descendant } from 'slate'
+import { useAppSelector } from '@/store/hooks'
 import { MEMO_DROPDOWN_MENU } from '@/utils/constants'
 import TheEditor from '@/components/TheEditor'
-import { memoItemType } from '@/types/memo'
 
 import './style.less'
 
@@ -21,17 +20,12 @@ const handleClickDropNode = (menu: any) => {
 const renderDropdownMenu = <Menu onClick={menu => handleClickDropNode(menu)} items={MEMO_DROPDOWN_MENU} />
 
 const MemosWrap: React.FC = () => {
-    const dispatch = useAppDispatch()
     const memoList = useAppSelector(state => state.memo.memoList)
 
-    useEffect(() => {
-        fetchMemoList().then(data => {
-            data.forEach(memo => {
-                memo.isEdit = false
-            })
-            dispatch(setMemoList(data))
-        })
-    }, [])
+    // 编辑
+    const handle2Edit = (content: Descendant[], memoId: string) => {
+        console.log('编辑', content, memoId)
+    }
 
     return (
         <div className={ClassNames('memosWrap')}>
@@ -46,7 +40,7 @@ const MemosWrap: React.FC = () => {
                         </div>
                     )}
                     <div className={ClassNames('contentWrap')}>
-                        <TheEditor initValue={memo.content} memoId={memo.id} readonly={!memo.isEdit} />
+                        <TheEditor initValue={memo.content} memoId={memo.id} readonly={!memo.isEdit} handleSubmit={handle2Edit} />
                     </div>
                 </div>
             ))}

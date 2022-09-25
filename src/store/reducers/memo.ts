@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { Descendant } from 'slate'
 import { memoItemType } from '@/types/memo'
 import { MyResponseType } from '@/types/request'
 import request from '@/utils/axios'
@@ -16,6 +17,11 @@ const initialState: stateType = {
  */
 export const fetchMemoList = async () => {
     const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/getAll')
+    return res.data
+}
+
+export const addMemo = async (content: Descendant[]) => {
+    const res: MyResponseType<null | string> = await request.post<null | string>('/memo/add', { content })
     return res.data
 }
 

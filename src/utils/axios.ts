@@ -39,7 +39,7 @@ export class Request {
         }
     }
 
-    async post<T = any>(url: string, data?: T, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
+    async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
         try {
             return await this.instance.post(url, data, config)
         } catch (err: any) {
@@ -61,15 +61,16 @@ export class Request {
                 timestamp: String(new Date().getTime()),
                 'Content-Type': 'application/json; charset=utf-8'
             },
-            transformRequest: [obj => qs.stringify(obj)],
+            // TODO：这里参数转换有什么用吗
+            // transformRequest: [obj => qs.stringify(obj)],
             // transformResponse: [
             //     (data: AxiosResponse) => {
             //         return data
             //     }
             // ],
-            paramsSerializer(params: any) {
-                return qs.stringify(params, { arrayFormat: 'brackets' })
-            },
+            // paramsSerializer(params: any) {
+            //     // return qs.stringify(params, { arrayFormat: 'brackets' })
+            // },
             timeout: 30000,
             withCredentials: false,
             responseType: 'json',

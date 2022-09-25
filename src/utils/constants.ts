@@ -34,3 +34,11 @@ export const MEMO_DROPDOWN_MENU: dropMenuItemType[] = [
         key: 'delete'
     }
 ]
+
+export const initEditorValue = [
+    {
+        // @ts-ignore
+        type: 'paragraph',
+        children: [{ text: '' }]
+    }
+]

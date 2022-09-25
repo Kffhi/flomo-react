@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, MouseEvent, KeyboardEvent } from 'react'
+import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, MouseEvent, KeyboardEvent } from 'react'
 import ClassNames from 'classnames'
 import { createEditor, Editor, Descendant } from 'slate'
 import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
@@ -8,17 +8,20 @@ import ToolBar from './render/ToolBar'
 import TagSelect from './render/TagSelect'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateMemoEditStatus } from '@/store/reducers/memo'
+import { initEditorValue } from '@/utils/constants'
+import { setTagIsShow } from '@/store/reducers/editor'
 
 import './style.less'
-import { setTagIsShow } from '@/store/reducers/editor'
 
 type propsType = {
     initValue: Descendant[]
+    handleSubmit: (content: Descendant[], memoId: string) => void
     memoId?: string
     readonly?: boolean
+    onRef?: any
 }
 
-const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
+const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSubmit, onRef }) => {
     const dispatch = useAppDispatch()
     const [value, setValue] = useState(initValue)
     const editor = useMemo(() => withReact(createEditor()), [])
@@ -72,7 +75,14 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
 
     // 点击发送
     const handleSubmitSend = () => {
-        console.log('当前编辑区内容', value)
+        handleSubmit(value, memoId ?? '')
+    }
+
+    // 清除内容
+    const clearEditor = () => {
+        // 编辑器状态复原
+        editor.children = initEditorValue
+        setValue(initEditorValue)
     }
 
     // 双击进入编辑
@@ -82,6 +92,12 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
             ReactEditor.focus(editor)
         }
     }
+
+    useImperativeHandle(onRef, () => {
+        return {
+            clearEditor
+        }
+    })
 
     return (
         <div className={ClassNames('theEditorWrap', { readonly })}>
@@ -106,7 +122,8 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId }) => {
 
 TheEditor.defaultProps = {
     readonly: false,
-    memoId: ''
+    memoId: '',
+    onRef: null
 }
 
 export default TheEditor

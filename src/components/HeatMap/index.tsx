@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import ClassNames from 'classnames'
 import { Tooltip } from 'antd'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { useAppSelector } from '@/store/hooks'
 import { getDateList } from '@/utils/date'
 import { dayItemType, dayMapType, heatMapType } from '@/types/baseInfo'
-import { fetchHeatMap, setHeatMap } from '@/store/reducers/baseInfo'
 
 import './style.less'
 
 const HeatMap: React.FC = () => {
-    const dispatch = useAppDispatch()
     const heatMap: heatMapType = useAppSelector(state => state.baseInfo.heatMap)
 
     const { dayList: day, monthList: month } = getDateList()
@@ -27,12 +25,6 @@ const HeatMap: React.FC = () => {
         })
         return arr as dayItemType[]
     }
-
-    useEffect(() => {
-        fetchHeatMap().then(data => {
-            dispatch(setHeatMap(data))
-        })
-    }, [])
 
     useEffect(() => {
         setDayList(completeDayTimes(dayList, new Map(heatMap)))

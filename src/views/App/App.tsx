@@ -1,25 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ClassNames from 'classnames'
-import { Descendant } from 'slate'
 import SearchHeader from '@/components/SearchHeader'
-import TheEditor from '@/components/TheEditor'
+import HeaderEditor from '@/components/HeaderEditor'
 import MemosWrap from '@/components/MemosWrap'
 import UserHeader from '@/components/UserHeader'
 import TheStat from '@/components/TheStat'
 import SliderBarUl from '@/components/SliderBarUl'
 import TagsTree from '@/components/TagsTree'
+import { useRefresh } from '@/utils/useRefresh'
 
 import './style.less'
 
-const initValue: Descendant[] = [
-    {
-        // @ts-ignore
-        type: 'paragraph',
-        children: [{ text: '' }]
-    }
-]
-
 const App: React.FC = () => {
+    const refresh = useRefresh()
+
+    useEffect(() => {
+        refresh().then()
+    }, [])
+
     return (
         <div className={ClassNames('theLayout')}>
             <div className={ClassNames('main')}>
@@ -31,9 +29,7 @@ const App: React.FC = () => {
                 </div>
                 <div className={ClassNames('mainWrap')}>
                     <SearchHeader />
-                    <div style={{ padding: '10px 15px' }}>
-                        <TheEditor initValue={initValue} readonly={false} />
-                    </div>
+                    <HeaderEditor />
                     <MemosWrap />
                 </div>
             </div>
