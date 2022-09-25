@@ -1,30 +1,66 @@
 import React, { useEffect, MouseEvent } from 'react'
 import ClassNames from 'classnames'
-import { EllipsisOutlined } from '@ant-design/icons'
-import { Dropdown, Menu } from 'antd'
+import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { Dropdown, Menu, message, Modal } from 'antd'
 import dayjs from 'dayjs'
 import { Descendant } from 'slate'
 import { useAppSelector } from '@/store/hooks'
 import { MEMO_DROPDOWN_MENU } from '@/utils/constants'
 import TheEditor from '@/components/TheEditor'
-
+import { deleteMemo, editMemo } from '@/store/reducers/memo'
+import { useRefresh } from '@/utils/useRefresh'
 import './style.less'
-
-const handleClickDropNode = (menu: any) => {
-    console.log(menu)
-}
-
-/**
- * 下拉菜单
- */
-const renderDropdownMenu = <Menu onClick={menu => handleClickDropNode(menu)} items={MEMO_DROPDOWN_MENU} />
+import { memoItemType } from '@/types/memo'
 
 const MemosWrap: React.FC = () => {
     const memoList = useAppSelector(state => state.memo.memoList)
+    const refresh = useRefresh()
+
+    /**
+     * 下拉菜单
+     */
+    const renderDropdownMenu = (memo: memoItemType) => {
+        // 删除
+        const handle2Delete = () => {
+            Modal.confirm({
+                title: '删除',
+                content: '确认删除?',
+                icon: <ExclamationCircleOutlined />,
+                okText: '删除',
+                cancelText: '取消',
+                okType: 'danger',
+                // centered: true,
+                onOk: () => {
+                    deleteMemo(memo.id).then(async () => {
+                        await refresh()
+                        await message.success('删除成功')
+                    })
+                },
+                onCancel: () => {}
+            })
+        }
+
+        // 点击下拉菜单
+        const handleClickDropNode = (menu: any) => {
+            console.log(menu)
+            switch (menu.key) {
+                case 'delete':
+                    handle2Delete()
+                    break
+                default:
+            }
+        }
+        return <Menu onClick={menu => handleClickDropNode(menu)} items={MEMO_DROPDOWN_MENU} />
+    }
 
     // 编辑
-    const handle2Edit = (content: Descendant[], memoId: string) => {
-        console.log('编辑', content, memoId)
+    const handle2Edit = (content: Descendant[], id: string) => {
+        console.log('编辑', content, id)
+        editMemo(id, content).then(async () => {
+            // TODO: 现在刷新数据之后会导致memo列表所有的memo都恢复成未再编辑状态
+            await refresh()
+            await message.success('编辑成功')
+        })
     }
 
     return (
@@ -34,7 +70,7 @@ const MemosWrap: React.FC = () => {
                     {!memo.isEdit && (
                         <div className={ClassNames('headerWrap')}>
                             <span>{dayjs(memo.createTime).format('YYYY年MM月DD日 HH:mm:ss')}</span>
-                            <Dropdown overlay={renderDropdownMenu} placement="bottom">
+                            <Dropdown overlay={renderDropdownMenu(memo)} placement="bottom">
                                 <EllipsisOutlined onClick={e => e.preventDefault()} />
                             </Dropdown>
                         </div>

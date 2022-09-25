@@ -13,15 +13,34 @@ const initialState: stateType = {
 }
 
 /**
- * 请求标签树
+ * 请求memo列表
  */
 export const fetchMemoList = async () => {
     const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/getAll')
     return res.data
 }
 
+/**
+ * 新增memo
+ * @param content
+ */
 export const addMemo = async (content: Descendant[]) => {
     const res: MyResponseType<null | string> = await request.post<null | string>('/memo/add', { content })
+    return res.data
+}
+
+/**
+ * 编辑memo
+ * @param id
+ * @param content
+ */
+export const editMemo = async (id: string, content: Descendant[]) => {
+    const res: MyResponseType<null | string> = await request.post<null | string>('/memo/edit', { id, content })
+    return res.data
+}
+
+export const deleteMemo = async (id: string) => {
+    const res: MyResponseType<null | string> = await request.delete<null | string>('/memo/delete', { id })
     return res.data
 }
 

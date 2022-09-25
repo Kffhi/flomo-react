@@ -1,6 +1,18 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError, AxiosResponse, CancelTokenStatic } from 'axios'
 import qs from 'qs'
+import { isString } from 'lodash'
 import { MyResponseType } from '@/types/request'
+
+// 增加query参数
+export function addParam(url: string, obj: any = {}): string {
+    url += '?'
+    Object.keys(obj).forEach(key => {
+        if (isString(obj[key])) {
+            url += `${key}=${obj[key]}&`
+        }
+    })
+    return url
+}
 
 export class Request {
     protected instance: AxiosInstance
@@ -25,9 +37,9 @@ export class Request {
         this.interceptorsResponse()
     }
 
-    async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
+    async get<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
         try {
-            return await this.instance.get(url, config)
+            return await this.instance.get(addParam(url, data), config)
         } catch (err: any) {
             const message = err.message || '请求失败'
             return Promise.reject({
@@ -42,6 +54,20 @@ export class Request {
     async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
         try {
             return await this.instance.post(url, data, config)
+        } catch (err: any) {
+            const message = err.message || '请求失败'
+            return Promise.reject({
+                code: -1,
+                message,
+                status: false,
+                data: null as any
+            })
+        }
+    }
+
+    async delete<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<MyResponseType<T>> {
+        try {
+            return await this.instance.delete(addParam(url, data), config)
         } catch (err: any) {
             const message = err.message || '请求失败'
             return Promise.reject({

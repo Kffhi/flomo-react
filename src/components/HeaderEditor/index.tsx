@@ -14,10 +14,11 @@ const App: React.FC = () => {
 
     // 新增
     const handle2Add = (content: Descendant[]) => {
-        editorRef?.current?.clearEditor()
         addMemo(content).then(async () => {
             // 刷新页面数据
             await refresh()
+            // 清空编辑器
+            editorRef?.current?.clearEditor()
             await message.success('新增成功')
         })
     }
