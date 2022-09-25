@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { TagsTreeType, currTag } from '@/types/tags'
+import { TagsTreeType, currTag, TagsNode } from '@/types/tags'
 import { MyResponseType } from '@/types/request'
 import request from '@/utils/axios'
 
 interface stateType {
     tags: TagsTreeType
     currTag: currTag
+    tagsArr: TagsNode[]
 }
 
 const initialState: stateType = {
     tags: [],
+    tagsArr: [],
     currTag: null
 }
 
@@ -27,6 +29,7 @@ const tagSlice = createSlice({
     reducers: {
         setTagTree(state, action: { payload: TagsTreeType }) {
             state.tags = action.payload
+            state.tagsArr = action.payload.flat(Infinity)
         },
         setCurrTag(state, action: { payload: currTag }) {
             state.currTag = action.payload

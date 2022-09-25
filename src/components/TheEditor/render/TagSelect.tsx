@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ClassNames from 'classnames'
+import { cloneDeep } from 'lodash'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { TagsNode } from '@/types/tags'
 import { setTagIsShow } from '@/store/reducers/editor'
 
 type propsType = {
@@ -13,6 +15,17 @@ const TagSelect: React.FC<propsType> = props => {
     const ref = useRef<any>(null)
     const dispatch = useAppDispatch()
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
+    const tagsArr = useAppSelector(state => state.tagsTree.tagsArr)
+    const [showTags, setShowTag] = useState<TagsNode[]>([])
+
+    useEffect(() => {
+        let arr = cloneDeep(tagsArr)
+        if (arr.length > 5) {
+            // 为了展示效果，默认取前5个
+            arr = arr.splice(0, 5)
+        }
+        setShowTag(arr)
+    }, [tagsArr])
 
     useEffect(() => {
         const el: any = ref.current
@@ -46,10 +59,10 @@ const TagSelect: React.FC<propsType> = props => {
 
     return (
         <div ref={ref} className={ClassNames('tagSelectWrap')} onMouseDown={e => e.preventDefault()}>
-            {['标签1', '标签2', '标签3'].map(item => {
+            {showTags.map(item => {
                 return (
-                    <div key={item} onClick={() => handleSelectTag({ value: item })} className={ClassNames('tagItem')}>
-                        {item}
+                    <div key={item.id} onClick={() => handleSelectTag({ value: item.value })} className={ClassNames('tagItem')}>
+                        {item.value}
                     </div>
                 )
             })}
