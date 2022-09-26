@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import ClassNames from 'classnames'
+import { text } from 'stream/consumers'
 import SearchHeader from '@/components/SearchHeader'
 import HeaderEditor from '@/components/HeaderEditor'
 import MemosWrap from '@/components/MemosWrap'
@@ -7,12 +8,15 @@ import UserHeader from '@/components/UserHeader'
 import TheStat from '@/components/TheStat'
 import SliderBarUl from '@/components/SliderBarUl'
 import TagsTree from '@/components/TagsTree'
-import { useRefresh } from '@/utils/useRefresh'
+import { useRefresh } from '@/hooks/useRefresh'
 
 import './style.less'
+import { useAppSelector } from '@/store/hooks'
+import { layoutSymbolT } from '@/store/reducers/global'
 
 const App: React.FC = () => {
     const refresh = useRefresh()
+    const layoutSymbol: layoutSymbolT = useAppSelector(state => state.global.layoutSymbol)
 
     useEffect(() => {
         refresh().then()
@@ -28,9 +32,18 @@ const App: React.FC = () => {
                     <TagsTree />
                 </div>
                 <div className={ClassNames('mainWrap')}>
-                    <SearchHeader />
-                    <HeaderEditor />
-                    <MemosWrap />
+                    {layoutSymbol === 'MemoList' && (
+                        <>
+                            <SearchHeader />
+                            <HeaderEditor />
+                            <MemosWrap />
+                        </>
+                    )}
+                    {layoutSymbol === 'Message' && (
+                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <h1>还没写好捏🐶</h1>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

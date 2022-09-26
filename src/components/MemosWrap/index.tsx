@@ -8,7 +8,7 @@ import { useAppSelector } from '@/store/hooks'
 import { MEMO_DROPDOWN_MENU } from '@/utils/constants'
 import TheEditor from '@/components/TheEditor'
 import { deleteMemo, editMemo } from '@/store/reducers/memo'
-import { useRefresh } from '@/utils/useRefresh'
+import { useRefresh } from '@/hooks/useRefresh'
 import './style.less'
 import { memoItemType } from '@/types/memo'
 

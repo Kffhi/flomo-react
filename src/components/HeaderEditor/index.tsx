@@ -5,7 +5,7 @@ import { message } from 'antd'
 import TheEditor from '@/components/TheEditor'
 import { addMemo } from '@/store/reducers/memo'
 import './style.less'
-import { useRefresh } from '@/utils/useRefresh'
+import { useRefresh } from '@/hooks/useRefresh'
 import { initEditorValue } from '@/utils/constants'
 
 const App: React.FC = () => {

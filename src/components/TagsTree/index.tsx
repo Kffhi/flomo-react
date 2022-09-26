@@ -2,22 +2,12 @@ import React, { useEffect } from 'react'
 import ClassNames from 'classnames'
 import { Tree, Dropdown, Menu } from 'antd'
 import { EllipsisOutlined } from '@ant-design/icons'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { dropMenuItemType, TagsNode, TagsTreeType } from '@/types/tags'
+import { useMemoList } from '@/hooks/useMemoList'
+import { setLayoutSymbol } from '@/store/reducers/global'
 
 import './style.less'
-
-// 点击下拉菜单
-const handleClickDropNode = (menu: any) => {
-    // TODO: ？？？为什么这里点击会让tree的select失效
-    console.log('menu', menu)
-}
-
-// 点击树节点
-const handleClickTreeNode = (key: any, o: any) => {
-    // TODO：？？？为什么点击之后不给我原始的data
-    console.log('key', key, o.node)
-}
 
 const menu: dropMenuItemType[] = [
     {
@@ -30,33 +20,51 @@ const menu: dropMenuItemType[] = [
     }
 ]
 
-/**
- * 下拉菜单
- */
-const renderDropdownMenu = <Menu onClick={menu => handleClickDropNode(menu)} items={menu} />
-
-/**
- * 树节点
- * @param node
- */
-const renderTreeNode = (node: TagsNode) => {
-    return (
-        <div className={ClassNames('tagsNode')}>
-            <div className={ClassNames('nodeLeft')}>
-                <span className={ClassNames('tagIcon')}>{node.icon}</span>
-                <span>{node.value}</span>
-            </div>
-            <div className={ClassNames('nodeRight')}>
-                <Dropdown overlay={renderDropdownMenu} placement="bottom">
-                    <EllipsisOutlined onClick={e => e.preventDefault()} />
-                </Dropdown>
-            </div>
-        </div>
-    )
-}
-
 const TagsTree: React.FC = () => {
+    const dispatch = useAppDispatch()
     const tagsTree: TagsTreeType = useAppSelector(state => state.tagsTree.tags)
+    const { refreshType, refreshMemoList } = useMemoList()
+
+    // 点击下拉菜单
+    const handleClickDropNode = (menu: any) => {
+        // TODO: ？？？为什么这里点击会让tree的select失效
+        console.log('menu', menu)
+    }
+
+    // 点击树节点
+    const handleClickTreeNode = async (key: any, o: any) => {
+        const tag = o.node.value
+        const tagId = o.node.id
+        console.log('点击树节点', tag, tagId)
+        dispatch(setLayoutSymbol('MemoList'))
+        await refreshMemoList('byTag', { tag, tagId })
+        console.log('tree refreshType', refreshType)
+    }
+
+    /**
+     * 下拉菜单
+     */
+    const renderDropdownMenu = <Menu onClick={menu => handleClickDropNode(menu)} items={menu} />
+
+    /**
+     * 树节点
+     * @param node
+     */
+    const renderTreeNode = (node: TagsNode) => {
+        return (
+            <div className={ClassNames('tagsNode')}>
+                <div className={ClassNames('nodeLeft')}>
+                    <span className={ClassNames('tagIcon')}>{node.icon}</span>
+                    <span>{node.value}</span>
+                </div>
+                <div className={ClassNames('nodeRight')}>
+                    <Dropdown overlay={renderDropdownMenu} placement="bottom">
+                        <EllipsisOutlined onClick={e => e.preventDefault()} />
+                    </Dropdown>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className={ClassNames('tagsTree')}>
