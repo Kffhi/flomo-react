@@ -23,7 +23,7 @@ const menu: dropMenuItemType[] = [
 const TagsTree: React.FC = () => {
     const dispatch = useAppDispatch()
     const tagsTree: TagsTreeType = useAppSelector(state => state.tagsTree.tags)
-    const { refreshType, refreshMemoList } = useMemoList()
+    const { refreshMemoList } = useMemoList()
 
     // 点击下拉菜单
     const handleClickDropNode = (menu: any) => {
@@ -35,10 +35,7 @@ const TagsTree: React.FC = () => {
     const handleClickTreeNode = async (key: any, o: any) => {
         const tag = o.node.value
         const tagId = o.node.id
-        console.log('点击树节点', tag, tagId)
-        dispatch(setLayoutSymbol('MemoList'))
         await refreshMemoList('byTag', { tag, tagId })
-        console.log('tree refreshType', refreshType)
     }
 
     /**

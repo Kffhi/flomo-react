@@ -1,10 +1,8 @@
 // 根据不同需求刷新memo列表
-import { useState, useReducer } from 'react'
+// import { useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
 import { fetchMemoList, setMemoList } from '@/store/reducers/memo'
-
-// 刷新类型，分别对应：全部/通过tag搜索/通过关键字（或其他条件）搜索/随机漫步
-type refreshTypeT = 'All' | 'byTag' | 'Filter' | 'HangOut'
+import { refreshTypeT, setLayoutSymbol, setRefreshType } from '@/store/reducers/global'
 
 type tagParamT = {
     tag: string
@@ -19,8 +17,6 @@ type refreshParamsType =
 
 export const useMemoList = () => {
     const dispatch = useAppDispatch()
-
-    const [refreshType, setRefreshType] = useState<refreshTypeT>('All')
 
     // 获取所有
     const getMemoListAll = () => {
@@ -58,7 +54,8 @@ export const useMemoList = () => {
     }
 
     const refreshMemoList = (type: refreshTypeT, params?: refreshParamsType) => {
-        setRefreshType(type)
+        dispatch(setLayoutSymbol('MemoList'))
+        dispatch(setRefreshType(type))
         return new Promise<void>((resolve, reject) => {
             switch (type) {
                 case 'All':
@@ -84,5 +81,5 @@ export const useMemoList = () => {
         })
     }
 
-    return { refreshType, refreshMemoList }
+    return { refreshMemoList }
 }
