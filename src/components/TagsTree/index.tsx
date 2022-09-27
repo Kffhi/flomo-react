@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ClassNames from 'classnames'
 import { Tree, Dropdown, Menu } from 'antd'
 import { EllipsisOutlined } from '@ant-design/icons'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { dropMenuItemType, TagsNode, TagsTreeType } from '@/types/tags'
 import { useMemoList } from '@/hooks/useMemoList'
-import { setLayoutSymbol } from '@/store/reducers/global'
+import { layoutSymbolT, refreshTypeT, setLayoutSymbol } from '@/store/reducers/global'
 
 import './style.less'
 
@@ -24,6 +24,16 @@ const TagsTree: React.FC = () => {
     const dispatch = useAppDispatch()
     const tagsTree: TagsTreeType = useAppSelector(state => state.tagsTree.tags)
     const { refreshMemoList } = useMemoList()
+    const [highLightTag, setHighLightTag] = useState<string>('')
+    const layoutSymbol: layoutSymbolT = useAppSelector(state => state.global.layoutSymbol)
+    const refreshType: refreshTypeT = useAppSelector(state => state.global.refreshType)
+
+    // 更新当前高亮状态
+    useEffect(() => {
+        if (layoutSymbol !== 'MemoList' || refreshType !== 'byTag') {
+            setHighLightTag('')
+        }
+    })
 
     // 点击下拉菜单
     const handleClickDropNode = (menu: any) => {
@@ -35,6 +45,7 @@ const TagsTree: React.FC = () => {
     const handleClickTreeNode = async (key: any, o: any) => {
         const tag = o.node.value
         const tagId = o.node.id
+        setHighLightTag(tagId) // 手动设置高亮
         await refreshMemoList('byTag', { tag, tagId })
     }
 
@@ -49,7 +60,7 @@ const TagsTree: React.FC = () => {
      */
     const renderTreeNode = (node: TagsNode) => {
         return (
-            <div className={ClassNames('tagsNode')}>
+            <div className={ClassNames('tagsNode', { isHighLight: highLightTag === node.id })}>
                 <div className={ClassNames('nodeLeft')}>
                     <span className={ClassNames('tagIcon')}>{node.icon}</span>
                     <span>{node.value}</span>
