@@ -4,6 +4,11 @@ import { memoItemType } from '@/types/memo'
 import { MyResponseType } from '@/types/request'
 import request from '@/utils/axios'
 
+export type tagParamT = {
+    tag: string
+    tagId: string
+}
+
 interface stateType {
     memoList: memoItemType[]
 }
@@ -17,6 +22,22 @@ const initialState: stateType = {
  */
 export const fetchMemoList = async () => {
     const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/getAll')
+    return res.data
+}
+
+/**
+ * 根据标签请求memo列表
+ */
+export const fetchMemoByTag = async (params: tagParamT) => {
+    const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/getByTag', params)
+    return res.data
+}
+
+/**
+ * 随机获取一个memo
+ */
+export const getMemoHangout = async () => {
+    const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/hangout')
     return res.data
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, MouseEvent } from 'react'
+import React from 'react'
 import ClassNames from 'classnames'
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import { Dropdown, Menu, message, Modal } from 'antd'
+import { Dropdown, Menu, message, Modal, Button } from 'antd'
 import dayjs from 'dayjs'
 import { Descendant } from 'slate'
 import { useAppSelector } from '@/store/hooks'
@@ -11,10 +11,14 @@ import { deleteMemo, editMemo } from '@/store/reducers/memo'
 import { useRefresh } from '@/hooks/useRefresh'
 import './style.less'
 import { memoItemType } from '@/types/memo'
+import { refreshTypeT } from '@/store/reducers/global'
+import { useMemoList } from '@/hooks/useMemoList'
 
 const MemosWrap: React.FC = () => {
     const memoList = useAppSelector(state => state.memo.memoList)
     const refresh = useRefresh()
+    const { refreshMemoList } = useMemoList()
+    const refreshType: refreshTypeT = useAppSelector(state => state.global.refreshType)
 
     /**
      * 下拉菜单
@@ -63,6 +67,11 @@ const MemosWrap: React.FC = () => {
         })
     }
 
+    // 随机漫步刷新
+    const handleAnotherHangout = async () => {
+        await refreshMemoList('HangOut')
+    }
+
     return (
         <div className={ClassNames('memosWrap')}>
             {memoList.map(memo => (
@@ -80,6 +89,14 @@ const MemosWrap: React.FC = () => {
                     </div>
                 </div>
             ))}
+            {/* 随机漫步专用按钮 */}
+            {refreshType === 'HangOut' && (
+                <div className={ClassNames('anotherBtn')}>
+                    <Button shape="round" block onClick={handleAnotherHangout}>
+                        another
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }
