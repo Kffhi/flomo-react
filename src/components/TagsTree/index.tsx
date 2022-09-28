@@ -8,6 +8,7 @@ import { useMemoList } from '@/hooks/useMemoList'
 import { layoutSymbolT, refreshTypeT, setLayoutSymbol } from '@/store/reducers/global'
 
 import './style.less'
+import { useSearch } from '@/hooks/useSearch'
 
 const menu: dropMenuItemType[] = [
     {
@@ -27,6 +28,7 @@ const TagsTree: React.FC = () => {
     const [highLightTag, setHighLightTag] = useState<string>('')
     const layoutSymbol: layoutSymbolT = useAppSelector(state => state.global.layoutSymbol)
     const refreshType: refreshTypeT = useAppSelector(state => state.global.refreshType)
+    const { setSearchText } = useSearch()
 
     // 更新当前高亮状态
     useEffect(() => {
@@ -46,6 +48,7 @@ const TagsTree: React.FC = () => {
         const tag = o.node.value
         const tagId = o.node.id
         setHighLightTag(tagId) // 手动设置高亮
+        setSearchText('') // 清空搜索
         await refreshMemoList('byTag', { tag, tagId })
     }
 

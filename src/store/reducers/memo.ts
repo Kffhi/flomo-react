@@ -9,6 +9,10 @@ export type tagParamT = {
     tagId: string
 }
 
+export type searchParamT = {
+    word: string
+}
+
 interface stateType {
     memoList: memoItemType[]
 }
@@ -30,6 +34,14 @@ export const fetchMemoList = async () => {
  */
 export const fetchMemoByTag = async (params: tagParamT) => {
     const res: MyResponseType<memoItemType[]> = await request.get<memoItemType[]>('/memo/getByTag', params)
+    return res.data
+}
+
+/**
+ * 根据标签请求memo列表
+ */
+export const searchMemo = async (params: searchParamT) => {
+    const res: MyResponseType<memoItemType[]> = await request.post<memoItemType[]>('/memo/search', params)
     return res.data
 }
 
@@ -60,6 +72,10 @@ export const editMemo = async (id: string, content: Descendant[]) => {
     return res.data
 }
 
+/**
+ * 删除memo
+ * @param id
+ */
 export const deleteMemo = async (id: string) => {
     const res: MyResponseType<null | string> = await request.delete<null | string>('/memo/delete', { id })
     return res.data

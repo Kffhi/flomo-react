@@ -1,14 +1,10 @@
 // 根据不同需求刷新memo列表
 // import { useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
-import { fetchMemoList, fetchMemoByTag, setMemoList, tagParamT, getMemoHangout } from '@/store/reducers/memo'
+import { fetchMemoList, fetchMemoByTag, setMemoList, tagParamT, getMemoHangout, searchMemo, searchParamT } from '@/store/reducers/memo'
 import { refreshTypeT, setLayoutSymbol, setRefreshType } from '@/store/reducers/global'
 
-type refreshParamsType =
-    | {
-          string?: any
-      }
-    | tagParamT
+type refreshParamsType = tagParamT | searchParamT
 
 export const useMemoList = () => {
     const dispatch = useAppDispatch()
@@ -29,12 +25,19 @@ export const useMemoList = () => {
             data.forEach(memo => {
                 memo.isEdit = false
             })
-            dispatch(setMemoList(data.splice(0, Math.floor(Math.random() * 10))))
+            dispatch(setMemoList(data))
         })
     }
 
     // 通过条件获取，暂时就是关键字/日期搜索
-    const getMemoListByParams = () => {}
+    const getMemoListByParams = (param: searchParamT) => {
+        return searchMemo(param).then(data => {
+            data.forEach(memo => {
+                memo.isEdit = false
+            })
+            dispatch(setMemoList(data))
+        })
+    }
 
     // 随机获取一条
     const getMemoListRandom = () => {
@@ -42,7 +45,7 @@ export const useMemoList = () => {
             data.forEach(memo => {
                 memo.isEdit = false
             })
-            dispatch(setMemoList(data.splice(0, Math.floor(Math.random() * 10))))
+            dispatch(setMemoList(data))
         })
     }
 
@@ -69,6 +72,9 @@ export const useMemoList = () => {
                         .catch(err => reject(err))
                     break
                 case 'Filter':
+                    getMemoListByParams(params as searchParamT)
+                        .then(() => resolve())
+                        .catch(err => reject(err))
                     break
                 case 'HangOut':
                     getMemoListRandom()

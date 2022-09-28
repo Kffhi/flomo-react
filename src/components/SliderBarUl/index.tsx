@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { layoutSymbolT, refreshTypeT, setLayoutSymbol } from '@/store/reducers/global'
 import { useMemoList } from '@/hooks/useMemoList'
 import './style.less'
+import { useSearch } from '@/hooks/useSearch'
 
 const App: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -14,6 +15,7 @@ const App: React.FC = () => {
     const { refreshMemoList } = useMemoList()
     const layoutSymbol: layoutSymbolT = useAppSelector(state => state.global.layoutSymbol)
     const refreshType: refreshTypeT = useAppSelector(state => state.global.refreshType)
+    const { setSearchText } = useSearch()
 
     useEffect(() => {
         if (layoutSymbol === 'MemoList') {
@@ -30,6 +32,8 @@ const App: React.FC = () => {
     })
 
     const handleClickMenu = async (id: ACTIVE_MENU_TYPE) => {
+        setSearchText('') // 清空搜索
+        // 按需刷新
         if (id === 'MEMO') {
             await refreshMemoList('All')
         } else if (id === 'HANG_OUT') {
