@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, MouseEvent, KeyboardEvent } from 'react'
 import ClassNames from 'classnames'
-import { createEditor, Editor, Descendant, Transforms } from 'slate'
+import { createEditor, Editor, Descendant, Transforms, Range, Point } from 'slate'
 import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
 import ElementComponent from './render/Element'
 import Leaf from './render/Leaf'
@@ -40,8 +40,9 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
             dispatch(setTagIsShow(false))
         }
 
-        // 如果当前节点已经是tag，发现输入空格，那就变回普通节点
-        if ((event.key === ' ' || event.key === 'Enter') && isTag) {
+        // 如果当前节点已经是tag，并且已经是空格了，再发现输入空格，那就变回普通节点
+        // 不能简单的监听空格，因为中文输入法空格是选字...
+        if (event.key === 'Enter' && isTag) {
             Editor.removeMark(editor, 'tag')
         }
 
@@ -70,6 +71,20 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     // 编辑区内容变化
     const handleValueChange = (value: any) => {
         console.log('Value Change')
+
+        // TODO：先这样吧...暂时不知道优雅的写法是啥
+        // 如果当前光标的前一个位置的文本内容是空格，且当前在tag中，需要自动退出标签状态
+        const point = Range.start(editor.selection as Range) // 获取当前光标的点
+        const beforePoint = Editor.before(editor, point, { distance: 1 }) as Point // 光标前一个点
+        const range = Editor.range(editor, point, beforePoint) // 获取两点中间的范围
+        const lastStr = Editor.string(editor, range) // 获取两点中的文字内容
+        // 如果已经是空格且在标签中，那就退回为普通站文本
+        // @ts-ignore
+        if (lastStr === ' ' && Editor.marks(editor).tag) {
+            Editor.removeMark(editor, 'tag')
+        }
+
+        // 设置值
         setValue(value)
     }
 
