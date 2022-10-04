@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, MouseEvent, KeyboardEvent } from 'react'
 import ClassNames from 'classnames'
-import { createEditor, Editor, Descendant } from 'slate'
+import { createEditor, Editor, Descendant, Transforms } from 'slate'
 import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
 import ElementComponent from './render/Element'
 import Leaf from './render/Leaf'
@@ -75,14 +75,18 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
 
     // 点击发送
     const handleSubmitSend = () => {
-        handleSubmit(value, memoId ?? '')
+        // 简单的判断一下内容不为空
+        if (JSON.stringify(value) !== JSON.stringify(initValue)) {
+            handleSubmit(value, memoId ?? '')
+        }
     }
 
     // 清除内容
     const clearEditor = () => {
         // 编辑器状态复原
-        editor.children = initEditorValue
-        setValue(initEditorValue)
+        Transforms.select(editor, []) // 获取所有内容
+        editor.deleteFragment() // 删除选中
+        setValue(initEditorValue) // 重置内容
     }
 
     // 双击进入编辑
