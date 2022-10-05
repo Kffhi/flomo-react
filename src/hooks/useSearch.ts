@@ -6,6 +6,7 @@ export const useSearch = () => {
     const dispatch = useAppDispatch()
     const { refreshMemoList } = useMemoList()
     const [searchText, setSearchText] = useState<string>('')
+    const [searchDate, setSearchDate] = useState<string>('')
     const firstUpload = useRef(true)
 
     // 搜索
@@ -14,10 +15,8 @@ export const useSearch = () => {
             firstUpload.current = false
             return
         }
-        // if (searchText) {
-        refreshMemoList('Filter', { word: searchText }).then()
-        // }
-    }, [searchText])
+        refreshMemoList('Filter', { word: searchText, date: searchDate }).then()
+    }, [searchText, searchDate])
 
-    return { searchText, setSearchText }
+    return { searchText, setSearchText, searchDate, setSearchDate }
 }

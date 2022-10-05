@@ -10,7 +10,8 @@ export type tagParamT = {
 }
 
 export type searchParamT = {
-    word: string
+    word?: string
+    date?: string
 }
 
 interface stateType {
