@@ -12,6 +12,7 @@ export type tagParamT = {
 export type searchParamT = {
     word?: string
     date?: string
+    needSearch: boolean // 是否需要自动刷新，先这么写吧
 }
 
 interface stateType {

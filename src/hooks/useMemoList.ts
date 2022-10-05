@@ -1,5 +1,6 @@
 // 根据不同需求刷新memo列表
 // import { useState } from 'react'
+import dayjs from 'dayjs'
 import { useAppDispatch } from '@/store/hooks'
 import { fetchMemoList, fetchMemoByTag, setMemoList, tagParamT, getMemoHangout, searchMemo, searchParamT } from '@/store/reducers/memo'
 import { refreshTypeT, setLayoutSymbol, setRefreshType } from '@/store/reducers/global'
@@ -31,7 +32,12 @@ export const useMemoList = () => {
 
     // 通过条件获取，暂时就是关键字/日期搜索
     const getMemoListByParams = (param: searchParamT) => {
-        return searchMemo(param).then(data => {
+        const obj = { ...param }
+        // TODO：Flomo似乎也没做当前的搜索
+        if (obj?.date === dayjs().format('YYYY年MM月DD日')) {
+            obj.date = ''
+        }
+        return searchMemo(obj).then(data => {
             data.forEach(memo => {
                 memo.isEdit = false
             })
