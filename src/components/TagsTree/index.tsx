@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import ClassNames from 'classnames'
 import { Tree, Dropdown, Menu } from 'antd'
 import { EllipsisOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { dropMenuItemType, TagsNode, TagsTreeType } from '@/types/tags'
 import { useMemoList } from '@/hooks/useMemoList'
-import { layoutSymbolT, refreshTypeT, setLayoutSymbol } from '@/store/reducers/global'
-
+import { layoutSymbolT, refreshTypeT, setLayoutSymbol, setSearchParam } from '@/store/reducers/global'
 import './style.less'
-import { useSearch } from '@/hooks/useSearch'
 
 const menu: dropMenuItemType[] = [
     {
@@ -28,7 +27,6 @@ const TagsTree: React.FC = () => {
     const [highLightTag, setHighLightTag] = useState<string>('')
     const layoutSymbol: layoutSymbolT = useAppSelector(state => state.global.layoutSymbol)
     const refreshType: refreshTypeT = useAppSelector(state => state.global.refreshType)
-    const { setSearchText } = useSearch()
 
     // 更新当前高亮状态
     useEffect(() => {
@@ -48,7 +46,7 @@ const TagsTree: React.FC = () => {
         const tag = o.node.value
         const tagId = o.node.id
         setHighLightTag(tagId) // 手动设置高亮
-        setSearchText('') // 清空搜索
+        dispatch(setSearchParam({ word: '', date: dayjs().format('YYYY年MM月DD日'), needSearch: false }))
         await refreshMemoList('byTag', { tag, tagId })
     }
 
