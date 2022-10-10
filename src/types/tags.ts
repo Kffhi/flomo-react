@@ -14,5 +14,4 @@ export type currTag = TagsNode | null
 export type dropMenuItemType = {
     label: string
     key: string
-    isDisable?: boolean
 }

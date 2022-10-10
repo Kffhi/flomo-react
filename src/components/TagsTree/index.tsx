@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ClassNames from 'classnames'
-import { Tree, Dropdown, Menu } from 'antd'
+import { Tree, Dropdown, Menu, Button, message } from 'antd'
 import { EllipsisOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -9,13 +9,21 @@ import { useMemoList } from '@/hooks/useMemoList'
 import { layoutSymbolT, refreshTypeT, setLayoutSymbol, setSearchParam } from '@/store/reducers/global'
 import './style.less'
 
-const menu: dropMenuItemType[] = [
+const menu = [
     {
-        label: '重命名',
+        label: (
+            <Button size="small" disabled type="text">
+                重命名
+            </Button>
+        ),
         key: 'rename'
     },
     {
-        label: '更改图标',
+        label: (
+            <Button size="small" type="text">
+                更改图标
+            </Button>
+        ),
         key: 'reIcon'
     }
 ]
@@ -36,9 +44,20 @@ const TagsTree: React.FC = () => {
     })
 
     // 点击下拉菜单
-    const handleClickDropNode = (menu: any) => {
-        // TODO: ？？？为什么这里点击会让tree的select失效
-        console.log('menu', menu)
+    const handleClickDropNode = ({ item, key, keyPath, domEvent }: any, node: TagsNode) => {
+        domEvent.stopPropagation()
+        // console.log('menu', item)
+        // console.log('menu', key)
+        // console.log('menu', keyPath)
+        // console.log('node', node.value, node.id)
+        switch (key) {
+            case 'rename':
+                break
+            case 'reIcon':
+                message.warning('暂未开放').then()
+                break
+            default:
+        }
     }
 
     // 点击树节点
@@ -53,7 +72,9 @@ const TagsTree: React.FC = () => {
     /**
      * 下拉菜单
      */
-    const renderDropdownMenu = <Menu onClick={menu => handleClickDropNode(menu)} items={menu} />
+    const renderDropdownMenu = (node: TagsNode) => {
+        return <Menu onClick={menu => handleClickDropNode(menu, node)} items={menu} />
+    }
 
     /**
      * 树节点
@@ -67,7 +88,7 @@ const TagsTree: React.FC = () => {
                     <span>{node.value}</span>
                 </div>
                 <div className={ClassNames('nodeRight')}>
-                    <Dropdown overlay={renderDropdownMenu} placement="bottom">
+                    <Dropdown overlay={() => renderDropdownMenu(node)} placement="bottom">
                         <EllipsisOutlined onClick={e => e.preventDefault()} />
                     </Dropdown>
                 </div>
