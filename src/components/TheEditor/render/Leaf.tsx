@@ -1,7 +1,10 @@
 import React from 'react'
 import ClassNames from 'classnames'
+import { useReadOnly } from 'slate-react'
 
 const Leaf: React.FC = (props: any) => {
+    const readonly = useReadOnly()
+
     let { children } = props
     const { leaf, attributes } = props
 
@@ -15,7 +18,7 @@ const Leaf: React.FC = (props: any) => {
         children = <u>{children}</u>
     }
     if (leaf.tag) {
-        children = <span className={ClassNames('tagNodeWrap')}>{children}</span>
+        children = <span className={ClassNames('tagNodeWrap', { isReadonly: readonly })}>{children}</span>
     }
     return <span {...attributes}>{children}</span>
 }

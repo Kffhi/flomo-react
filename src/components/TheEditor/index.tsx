@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, MouseEvent, KeyboardEvent } from 'react'
 import ClassNames from 'classnames'
-import { createEditor, Editor, Descendant, Transforms, Range, Point } from 'slate'
+import { createEditor, Editor, Descendant, Transforms, Range, Point, NodeEntry, Text } from 'slate'
 import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
 import ElementComponent from './render/Element'
 import Leaf from './render/Leaf'
@@ -78,11 +78,21 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         const beforePoint = Editor.before(editor, point, { distance: 1 }) as Point // 光标前一个点
         const range = Editor.range(editor, point, beforePoint) // 获取两点中间的范围
         const lastStr = Editor.string(editor, range) // 获取两点中的文字内容
-        // 如果已经是空格且在标签中，那就退回为普通站文本
+        // 如果已经是空格且在标签中，那就退回为普通文本
         // @ts-ignore
         if (lastStr === ' ' && Editor.marks(editor).tag) {
             Editor.removeMark(editor, 'tag')
         }
+
+        /**
+         * TODO:
+         * 预期是实现：文本内容变化的时候，能识别出不是标签的内容去掉mark标识（例如前面的#被删了的时候，自动把当前node变成普通的文本节点）
+         * （如果还要加上是标签的内容自动加上tag的mark那会更麻烦）
+         * 但是如果是监听内容变化的话，似乎需要每一次都要去遍历所有的节点做检查，然后根据不同node的状态修改node的mark
+         * 开销可能会比较大，代码也很复杂
+         * 是否在编辑的时候不展示标签的样式，只在只读的状态展示标签样式，类似flomo的编辑器
+         * 这样的话就是在保存之前对数据做一次统一的检查调整就好
+         */
 
         // 设置值
         setValue(value)
