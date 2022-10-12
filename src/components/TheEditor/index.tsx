@@ -26,18 +26,32 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     const [value, setValue] = useState(initValue)
     const editor = useMemo(() => withReact(createEditor()), [])
     const editorRef = useRef<any>(null)
-    const focused = useFocused()
+    const tagSelectRef = useRef<any>(null)
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
 
     // 增加键盘事件监听
-    const handleMouseDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+        event.stopPropagation()
+
         const marks = Editor.marks(editor)
         // @ts-ignore
         const { tag: isTag = false } = marks
 
-        // 如果标签选择menu展示了但是用户直接输入了，那就隐藏
+        // 如果标签选择menu展示了但是用户直接输入
         if (isShowTagSelect) {
-            dispatch(setTagIsShow(false))
+            // 输入上下箭头切换备选的tag
+            // 输入回车确认选中tag
+            const isArrow = event.key === 'ArrowDown' || event.key === 'ArrowUp'
+            if (isArrow || event.key === 'Enter') {
+                // 阻止默认的输入
+                event.preventDefault()
+                // 调用tag选择
+                tagSelectRef?.current?.handleSelectTagKeyUp(event)
+            } else {
+                // 不是按箭头且用户有输入，那就隐藏
+                // 回车的隐藏写在TagSelect里
+                dispatch(setTagIsShow(false))
+            }
         }
 
         // 如果当前节点已经是tag，并且已经是空格了，再发现输入空格，那就变回普通节点
@@ -131,7 +145,6 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     return (
         <div className={ClassNames('theEditorWrap', { readonly })}>
             <div className={ClassNames('editor')} ref={editorRef}>
-                <TagSelect editor={editor} editorRef={editorRef} />
                 <Slate editor={editor} value={value} onChange={value => handleValueChange(value)}>
                     <Editable
                         className={ClassNames('editableWrap')}
@@ -139,11 +152,12 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
                         renderLeaf={renderLeaf}
                         renderElement={renderElement}
                         readOnly={readonly}
-                        onKeyDown={handleMouseDown}
+                        onKeyDown={handleKeyDown}
                         onDoubleClick={handleDBClick}
                     />
                     {!readonly && <ToolBar handleSubmitSend={handleSubmitSend} />}
                 </Slate>
+                <TagSelect editor={editor} onRef={tagSelectRef} editorRef={editorRef} />
             </div>
         </div>
     )
