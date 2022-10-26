@@ -16,6 +16,8 @@
         "axios": "^0.27.2",
         "classnames": "^2.3.1",
         "dayjs": "^1.11.5",
+        "image-extensions": "^1.1.0",
+        "is-url": "^1.2.4",
         "qs": "^6.11.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
@@ -26,6 +28,7 @@
     "devDependencies": {
         "@commitlint/cli": "^16.2.3",
         "@commitlint/config-conventional": "^16.2.1",
+        "@types/is-url": "^1.2.30",
         "@types/node": "^18.7.11",
         "@types/qs": "^6.9.7",
         "@types/react": "^17.0.33",

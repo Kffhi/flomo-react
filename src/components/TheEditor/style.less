@@ -60,6 +60,21 @@
                     margin-left: -3px;
                 }
             }
+
+            .imageWrap {
+                position: relative;
+
+                img {
+                    display: block;
+                    max-width: 100%;
+                    max-height: 20em;
+
+                    &.selected,
+                    &.focused {
+                        box-shadow: 0 0 0 3px @editor-shadow-color;
+                    }
+                }
+            }
         }
 
         //标签

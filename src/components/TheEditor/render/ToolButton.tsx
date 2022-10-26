@@ -1,10 +1,11 @@
 import React, { ReactElement } from 'react'
 import ClassNames from 'classnames'
 import { Editor, Element as SlateElement, Transforms } from 'slate'
-import { useSlate } from 'slate-react'
+import { useSlateStatic } from 'slate-react'
 import { message } from 'antd'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTagIsShow } from '@/store/reducers/editor'
+import { insertImage } from '@/components/TheEditor/plugin/withImages'
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
@@ -15,7 +16,7 @@ type BtnType = {
 }
 
 const ToolButton: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
-    const editor = useSlate()
+    const editor = useSlateStatic()
     const dispatch = useAppDispatch()
 
     // 判断文本属性是否为真
@@ -90,8 +91,8 @@ const ToolButton: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
     const toggleImg = (event: any) => {
         event.preventDefault()
         // TODO: 实际这里应该是先调用upload然后拿到返回的文件地址
-        // 或者用生成的blob临时展示且占位，最终提交的时候图片再单独上传然后替换掉记录中的占位地址
-        message.warning('暂不支持图片哦')
+        const URL = 'https://www.kffhi.com/public/images/end/logo.jpg'
+        insertImage(editor, URL)
     }
 
     if (type === 'mark') {

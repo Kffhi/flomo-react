@@ -12,6 +12,7 @@ import { initEditorValue } from '@/utils/constants'
 import { setTagIsShow } from '@/store/reducers/editor'
 
 import './style.less'
+import { withImages } from '@/components/TheEditor/plugin/withImages'
 
 type propsType = {
     initValue: Descendant[]
@@ -24,7 +25,7 @@ type propsType = {
 const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSubmit, onRef }) => {
     const dispatch = useAppDispatch()
     const [value, setValue] = useState(initValue)
-    const editor = useMemo(() => withReact(createEditor()), [])
+    const editor = useMemo(() => withImages(withReact(createEditor())), [])
     const editorRef = useRef<any>(null)
     const tagSelectRef = useRef<any>(null)
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
