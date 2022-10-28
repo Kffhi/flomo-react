@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError, AxiosResponse, CancelTokenStatic } from 'axios'
-import qs from 'qs'
 import { isString } from 'lodash'
 import { MyResponseType } from '@/types/request'
+import { BASE_URL } from '@/utils/constants'
 
 // 增加query参数
 export function addParam(url: string, obj: any = {}): string {
@@ -28,7 +28,7 @@ export class Request {
 
     protected successCode: Array<Number> = [200, 201, 204]
 
-    protected baseURL: string = 'http://localhost:2022'
+    protected baseURL: string = BASE_URL
 
     constructor() {
         this.requestConfig()
@@ -157,5 +157,8 @@ export class Request {
         })
     }
 }
+
+// 返回完整的服务端路径
+export const getBaseUrl = (url: string) => `${BASE_URL}${url}`
 
 export default new Request()

@@ -1,11 +1,13 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import ClassNames from 'classnames'
 import { Editor, Element as SlateElement, Transforms } from 'slate'
 import { useSlateStatic } from 'slate-react'
-import { message } from 'antd'
+import { message, Upload } from 'antd'
+import type { RcFile, UploadFile, UploadProps, UploadChangeParam } from 'antd/es/upload/interface'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setTagIsShow } from '@/store/reducers/editor'
 import { insertImage } from '@/components/TheEditor/plugin/withImages'
+import { getBaseUrl } from '@/utils/axios'
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
@@ -18,6 +20,37 @@ type BtnType = {
 const ToolButton: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
     const editor = useSlateStatic()
     const dispatch = useAppDispatch()
+
+    // upload的属性配置
+    const imgProps: UploadProps = {
+        accept: '.png, .jpg, .jpeg',
+        name: 'files',
+        action: getBaseUrl('/memo/upload'),
+        showUploadList: false,
+        beforeUpload: file => {
+            const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+            if (!isJpgOrPng) {
+                message.error('只能选择png/jpg图片').then()
+                return false
+            }
+            const isLt5M = file.size / 1024 / 1024 < 5
+            if (!isLt5M) {
+                message.error('最大只支持5M的文件').then()
+                return false
+            }
+            return true
+        },
+        onChange: (info: UploadChangeParam) => {
+            const {
+                file: { status, response }
+            } = info
+
+            if (status === 'done') {
+                const url = getBaseUrl(response?.data?.url)
+                insertImage(editor, url)
+            }
+        }
+    }
 
     // 判断文本属性是否为真
     const isMarkActive = (format: any, editor: any) => {
@@ -90,9 +123,7 @@ const ToolButton: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
     // 点击加入图片
     const toggleImg = (event: any) => {
         event.preventDefault()
-        // TODO: 实际这里应该是先调用upload然后拿到返回的文件地址
-        const URL = 'https://www.kffhi.com/public/images/end/logo.jpg'
-        insertImage(editor, URL)
+        // const URL = 'https://www.kffhi.com/public/images/end/logo.jpg'
     }
 
     if (type === 'mark') {
@@ -133,14 +164,16 @@ const ToolButton: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
     }
     if (type === 'image') {
         return (
-            <span
-                className={ClassNames('toolItem', { active: isBlockActive(format, editor) })}
-                onMouseDown={event => {
-                    toggleImg(event)
-                }}
-            >
-                {content}
-            </span>
+            <Upload {...imgProps}>
+                <span
+                    className={ClassNames('toolItem', { active: isBlockActive(format, editor) })}
+                    onMouseDown={event => {
+                        toggleImg(event)
+                    }}
+                >
+                    {content}
+                </span>
+            </Upload>
         )
     }
     return <span>none</span>

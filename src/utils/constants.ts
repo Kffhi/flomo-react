@@ -1,6 +1,9 @@
 import { MENU_TYPE } from '@/types'
 import { dropMenuItemType } from '@/types/tags'
 
+// 后端服务地址
+export const BASE_URL = 'http://localhost:2022'
+
 // 左侧菜单列表
 export const ACTIVE_MENU: MENU_TYPE = {
     MEMO: 'MEMO',
