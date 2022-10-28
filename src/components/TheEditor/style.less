@@ -2,7 +2,7 @@
     width: 100%;
     //padding: 10px 15px;
     min-height: 85px; // TODO: 最大最小高度最好按照行高来
-    max-height: 650px;
+    max-height: calc(100vh - 120px);
     height: auto;
 
     &.readonly {
@@ -31,7 +31,7 @@
 
         .editableWrap {
             height: 100%;
-            max-height: 575px;
+            max-height: calc(100vh - 195px);
             overflow-y: auto;
             line-height: 20px;
             font-size: 14px;
@@ -68,10 +68,25 @@
                     display: block;
                     max-width: 100%;
                     max-height: 20em;
+                    border-radius: 2px;
+                    margin: 1em 0;
 
                     &.selected,
                     &.focused {
-                        box-shadow: 0 0 0 3px @editor-shadow-color;
+                        opacity: 0.6;
+                    }
+                }
+
+                .deleteIcon {
+                    position: absolute;
+                    top: 5px;
+                    left: 5px;
+                    font-size: 2em;
+                    display: none; // 感觉放一个icon也没啥用，还丑，但是不放光标又确实容易找不到
+
+                    &.selected,
+                    &.focused {
+                        //
                     }
                 }
             }
