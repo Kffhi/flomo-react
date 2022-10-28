@@ -6,6 +6,9 @@ export const insertImage = (editor: Editor, url: string | ArrayBuffer | null) =>
     const text = { text: '' }
     const image = { type: 'image', url, children: [text] }
     Transforms.insertNodes(editor, image)
+    // TODO: 先强制在image后插入一个新的node防止光标丢失问题
+    const textNode = { type: 'paragraph', children: [text] }
+    Transforms.insertNodes(editor, textNode)
 }
 
 export const isImageUrl = (url: string) => {
