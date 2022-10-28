@@ -15,11 +15,11 @@ module.exports = {
     // scope 类型（定义之后，可通过上下键选择）
     scopes: [
         ['components', '组件相关'],
+        ['editor', '核心编辑器'],
         ['global', '全局配置相关'],
         ['utils', 'utils 相关'],
         ['element-ui', '对 element-ui 的调整'],
         ['styles', '样式相关'],
-        ['editor', '核心编辑器'],
         ['deps', '项目依赖'],
         ['other', '其他修改'],
         // 如果选择 custom，后面会让你再输入一个自定义的 scope。也可以不设置此项，把后面的 allowCustomScopes 设置为 true
