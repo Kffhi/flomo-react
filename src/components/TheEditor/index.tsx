@@ -116,7 +116,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     // 点击发送
     const handleSubmitSend = () => {
         // 简单的判断一下内容不为空
-        if (JSON.stringify(value) !== JSON.stringify(initValue)) {
+        if (JSON.stringify(value) !== JSON.stringify(initEditorValue)) {
             handleSubmit(value, memoId ?? '')
         }
     }
