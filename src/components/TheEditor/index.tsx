@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, Mou
 import ClassNames from 'classnames'
 import { createEditor, Editor, Descendant, Transforms, Range, Point, NodeEntry, Text } from 'slate'
 import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
+import { withHistory } from 'slate-history'
 import ElementComponent from './render/Element'
 import Leaf from './render/Leaf'
 import ToolBar from './render/ToolBar'
@@ -25,7 +26,7 @@ type propsType = {
 const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSubmit, onRef }) => {
     const dispatch = useAppDispatch()
     const [value, setValue] = useState(initValue)
-    const editor = useMemo(() => withImages(withReact(createEditor())), [])
+    const editor = useMemo(() => withImages(withHistory(withReact(createEditor()))), [])
     const editorRef = useRef<any>(null)
     const tagSelectRef = useRef<any>(null)
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
@@ -33,6 +34,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     // 增加键盘事件监听
     const handleKeyDown = (event: KeyboardEvent) => {
         event.stopPropagation()
+        // TODO: 功能基本完成之后代码需要整理
 
         const marks = Editor.marks(editor)
         // @ts-ignore
@@ -58,6 +60,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         // 如果当前节点已经是tag，并且已经是空格了，再发现输入空格，那就变回普通节点
         // 不能简单的监听空格，因为中文输入法空格是选字...
         if (event.key === 'Enter' && isTag) {
+            event.preventDefault()
             Editor.removeMark(editor, 'tag')
         }
 
@@ -68,8 +71,22 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
                 (event.key === 'Process' && event.code === 'Digit3')) &&
             !isTag
         ) {
+            event.preventDefault()
             Editor.addMark(editor, 'tag', true)
             dispatch(setTagIsShow(true))
+        }
+
+        // 撤销
+        if ((event.metaKey || event.ctrlKey) && !event.shiftKey && event.key === 'z') {
+            event.preventDefault()
+            console.log('撤销')
+            editor?.undo()
+        }
+        // 恢复
+        if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === 'z') {
+            event.preventDefault()
+            console.log('恢复')
+            editor?.redo()
         }
     }
 
