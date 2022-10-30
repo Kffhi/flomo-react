@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateMemoEditStatus } from '@/store/reducers/memo'
 import { initEditorValue } from '@/utils/constants'
 import { setTagIsShow } from '@/store/reducers/editor'
-
+import { toggleMark } from '@/components/TheEditor/plugin/format'
 import './style.less'
 import { withImages } from '@/components/TheEditor/plugin/withImages'
 
@@ -36,11 +36,15 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         event.stopPropagation()
         // TODO: 功能基本完成之后代码需要整理
 
-        const marks = Editor.marks(editor)
-        // @ts-ignore
-        const { tag: isTag = false } = marks
+        /// /////////// · 标签相关逻辑 start · ////////////
 
-        // 如果标签选择menu展示了但是用户直接输入
+        type marksT = {
+            [propName: string]: boolean
+        } | null
+        const marks = Editor.marks(editor) as marksT // TODO： 实际上这里的类型应该是Omit<Text, 'text'>才对？可是Text里也没我定义的这些format的标识才对，正确应该怎么定义？
+        const isTag = marks?.tag ?? false
+
+        // 如果当前标签选择框展示出来了，需要监听上下箭头（切换选中，默认选择第一个）或者回车（确认选中）
         if (isShowTagSelect) {
             // 输入上下箭头切换备选的tag
             // 输入回车确认选中tag
@@ -57,23 +61,45 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
             }
         }
 
-        // 如果当前节点已经是tag，并且已经是空格了，再发现输入空格，那就变回普通节点
-        // 不能简单的监听空格，因为中文输入法空格是选字...
+        // 如果当前节点已经是tag，且用户输入了回车，那就变回普通节点
         if (event.key === 'Enter' && isTag) {
             event.preventDefault()
             Editor.removeMark(editor, 'tag')
         }
 
-        // 如果输入#，那就自动变成tag
+        // 同上，如果此时已经是tag，但是用户输入了空格，那么也应该变回普通节点
+        // 但是又不能简单的监听空格，因为中文输入法空格是选字...
+        // 所以这部分逻辑放在了valueChange部分，根据新增的字符是不是' '且当前是否在tag中，来判断是否需要移除tag的mark
+
+        // 如果输入#，，且不是标签节点，那就自动变成tag
         if (
             (event.key === '#' ||
                 // TODO: 为什么中文的 # 号的key是Process啊
                 (event.key === 'Process' && event.code === 'Digit3')) &&
             !isTag
         ) {
-            event.preventDefault()
             Editor.addMark(editor, 'tag', true)
             dispatch(setTagIsShow(true))
+        }
+
+        /// /////////// · 标签相关逻辑 end · ////////////
+
+        // 加粗
+        if ((event.metaKey || event.ctrlKey) && event.key === 'b') {
+            event.preventDefault()
+            toggleMark(event, editor, 'bold')
+        }
+
+        // 斜体
+        if ((event.metaKey || event.ctrlKey) && event.key === 'i') {
+            event.preventDefault()
+            toggleMark(event, editor, 'italic')
+        }
+
+        // 下划线
+        if ((event.metaKey || event.ctrlKey) && event.key === 'u') {
+            event.preventDefault()
+            toggleMark(event, editor, 'underline')
         }
 
         // 撤销
