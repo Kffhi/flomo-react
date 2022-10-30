@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState, useImperativeHandle, MouseEvent, KeyboardEvent } from 'react'
 import ClassNames from 'classnames'
-import { createEditor, Editor, Descendant, Transforms, Range, Point, NodeEntry, Text } from 'slate'
-import { Slate, Editable, withReact, ReactEditor, useFocused } from 'slate-react'
+import { createEditor, Editor, Descendant, Transforms } from 'slate'
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { withHistory } from 'slate-history'
+import { isString } from 'lodash'
 import ElementComponent from './render/Element'
 import Leaf from './render/Leaf'
 import ToolBar from './render/ToolBar'
@@ -11,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateMemoEditStatus } from '@/store/reducers/memo'
 import { initEditorValue } from '@/utils/constants'
 import { setTagIsShow } from '@/store/reducers/editor'
-import { toggleMark } from '@/components/TheEditor/plugin/format'
+import { getCurNodeText, getLastStr, isBlockActive, LIST_TYPES, setListBlock, toggleBlock, toggleMark } from '@/components/TheEditor/plugin/format'
 import './style.less'
 import { withImages } from '@/components/TheEditor/plugin/withImages'
 
@@ -69,7 +70,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
             Editor.removeMark(editor, 'tag')
         }
 
-        // 同上，如果此时已经是tag，但是用户输入了空格，那么也应该变回普通节点
+        // TODO：同上，如果此时已经是tag，但是用户输入了空格，那么也应该变回普通节点
         // 但是又不能简单的监听空格，因为中文输入法空格是选字...
         // 所以这部分逻辑放在了valueChange部分，根据新增的字符是不是' '且当前是否在tag中，来判断是否需要移除tag的mark
 
@@ -107,6 +108,39 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
             toggleMark(event, editor, 'underline')
         }
 
+        // 如果前面的字符是'*'或者'1'，按下空格会进入列表状态，仿照markdown的预览状态但是实际上不按照markdown的格式存数据
+        // 与
+        const lastStr = getLastStr(editor)
+        // 无序列表
+        if (lastStr === '*' && event.key === ' ') {
+            // 进入无序列表
+            event.preventDefault()
+            // 删掉当前的'*'
+            Editor.deleteBackward(editor, { unit: 'character' })
+            setListBlock(editor, 'bulleted-list')
+        }
+
+        // 有序列表
+        if (lastStr === '1' && event.key === ' ') {
+            // 进入有序列表
+            event.preventDefault()
+            // 删掉当前的'1'
+            Editor.deleteBackward(editor, { unit: 'character' })
+            setListBlock(editor, 'numbered-list')
+        }
+
+        // 当前已经在有序/无序列表中，如果正在新的一个item的起始处，再按一下Enter，那么不添加一个新的list-item而是转换为普通文本
+        LIST_TYPES.forEach(item => {
+            const isActiveBlock = isBlockActive(item, editor, 'type')
+            if (isActiveBlock && event.key === 'Enter') {
+                const curNodeText = getCurNodeText(editor)
+                if (isString(curNodeText) && curNodeText === '') {
+                    event.preventDefault()
+                    toggleBlock(event, editor, item)
+                }
+            }
+        })
+
         // 撤销
         if ((event.metaKey || event.ctrlKey) && !event.shiftKey && event.key === 'z') {
             event.preventDefault()
@@ -137,10 +171,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
 
         // TODO：先这样吧...暂时不知道优雅的写法是啥
         // 如果当前光标的前一个位置的文本内容是空格，且当前在tag中，需要自动退出标签状态
-        const point = Range.start(editor.selection as Range) // 获取当前光标的点
-        const beforePoint = Editor.before(editor, point, { distance: 1 }) as Point // 光标前一个点
-        const range = Editor.range(editor, point, beforePoint) // 获取两点中间的范围
-        const lastStr = Editor.string(editor, range) // 获取两点中的文字内容
+        const lastStr = getLastStr(editor)
         // 如果已经是空格且在标签中，那就退回为普通文本
         // @ts-ignore
         const isTag = Editor.marks(editor).tag
