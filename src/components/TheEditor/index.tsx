@@ -30,6 +30,8 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
     const editorRef = useRef<any>(null)
     const tagSelectRef = useRef<any>(null)
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
+    // TODO: 用于解决tag接一个tag的问题
+    let needListenTagMark = true
 
     // 增加键盘事件监听
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -78,8 +80,11 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
                 (event.key === 'Process' && event.code === 'Digit3')) &&
             !isTag
         ) {
+            needListenTagMark = false
             Editor.addMark(editor, 'tag', true)
             dispatch(setTagIsShow(true))
+        } else {
+            needListenTagMark = true
         }
 
         /// /////////// · 标签相关逻辑 end · ////////////
@@ -138,7 +143,9 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         const lastStr = Editor.string(editor, range) // 获取两点中的文字内容
         // 如果已经是空格且在标签中，那就退回为普通文本
         // @ts-ignore
-        if (lastStr === ' ' && Editor.marks(editor).tag) {
+        const isTag = Editor.marks(editor).tag
+        if (lastStr === ' ' && isTag && needListenTagMark) {
+            // TODO: 但是这里有一个问题，当前面是空格，此时我按下#号，触发的顺序是先在上面onKeyDown里触发，标记为tag，触发value change，这里拿到的lastStr是空格。这就导致刚标记的tag又被remove了，这里应该拿用户输入的值才对，所以这里暂时用了一个needListenTagMark值临时解决一下
             Editor.removeMark(editor, 'tag')
         }
 
@@ -150,6 +157,8 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
          * 开销可能会比较大，代码也很复杂
          * 是否在编辑的时候不展示标签的样式，只在只读的状态展示标签样式，类似flomo的编辑器
          * 这样的话就是在保存之前对数据做一次统一的检查调整就好
+         * add：
+         * 暂时决定还是在编辑的时候也展示标签样式，这样虽然在删除的时候肯定是有问题的但是毕竟保存的时候又统一处理，反而能看出来除了删除之外是否有别的地方也出问题了
          */
 
         // 设置值
