@@ -31,6 +31,7 @@ const Image = (props: any) => {
 const Element: React.FC = (props: any) => {
     const { attributes, children, element } = props
     switch (element.type) {
+        // TODO: 多级列表支持，这里要改
         case 'list-item':
             return <li {...attributes}>{children}</li>
         case 'bulleted-list':

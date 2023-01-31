@@ -103,3 +103,14 @@ export const getCurNodeText = (editor: Editor) => {
     const text = node?.[0]?.text ?? null
     return text
 }
+
+/**
+ * 数据格式化，在创建好编辑器后对数据进行处理以兼容旧的，不支持多级列表的数据格式
+ * TODO：这个方法先暂定，目前看起来这个需求可以在拿到初始数据之后直接对JSON进行一次序列化操作来的更方便，甚至可以直接在服务端做掉，反正服务端现在是有遍历的逻辑需要进行的
+ * @param editor
+ */
+export const normalizeContent = (editor: Editor) => {
+    editor.children.forEach((node, index) => {
+        editor.normalizeNode([node, [index]])
+    })
+}

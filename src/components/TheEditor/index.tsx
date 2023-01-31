@@ -15,6 +15,7 @@ import { setTagIsShow } from '@/store/reducers/editor'
 import { getCurNodeText, getLastStr, isBlockActive, LIST_TYPES, setListBlock, toggleBlock, toggleMark } from '@/components/TheEditor/plugin/format'
 import './style.less'
 import { withImages } from '@/components/TheEditor/plugin/withImages'
+import { withList } from '@/components/TheEditor/plugin/withList'
 
 type propsType = {
     initValue: Descendant[]
@@ -27,7 +28,7 @@ type propsType = {
 const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSubmit, onRef }) => {
     const dispatch = useAppDispatch()
     const [value, setValue] = useState(initValue)
-    const editor = useMemo(() => withImages(withHistory(withReact(createEditor()))), [])
+    const editor = useMemo(() => withList(withImages(withHistory(withReact(createEditor())))), [])
     const editorRef = useRef<any>(null)
     const tagSelectRef = useRef<any>(null)
     const isShowTagSelect = useAppSelector(state => state.editor.isShowTagSelect)
@@ -108,8 +109,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
             toggleMark(event, editor, 'underline')
         }
 
-        // 如果前面的字符是'*'或者'1'，按下空格会进入列表状态，仿照markdown的预览状态但是实际上不按照markdown的格式存数据
-        // 与
+        // 如果前面的字符是'*'或者'1'，按下空格会进入列表状态，仿照markdown的预览状态
         const lastStr = getLastStr(editor)
         // 无序列表
         if (lastStr === '*' && event.key === ' ') {
@@ -140,6 +140,13 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
                 }
             }
         })
+
+        // TODO: Tab操作
+        if (event.key === 'Tab') {
+            event.preventDefault()
+            console.log('Tab')
+            editor?.handleTab()
+        }
 
         // 撤销
         if ((event.metaKey || event.ctrlKey) && !event.shiftKey && event.key === 'z') {
