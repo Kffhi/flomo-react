@@ -40,8 +40,58 @@ export const MEMO_DROPDOWN_MENU: dropMenuItemType[] = [
 
 export const initEditorValue = [
     {
-        // @ts-ignore
-        type: 'paragraph',
-        children: [{ text: '' }]
+        type: 'bulleted-list',
+        children: [
+            {
+                type: 'list-item',
+                children: [
+                    {
+                        text: '第一级01'
+                    }
+                ]
+            },
+            {
+                type: 'bulleted-list',
+                children: [
+                    {
+                        type: 'list-item',
+                        children: [
+                            {
+                                text: '第二级01'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'list-item',
+                        children: [
+                            {
+                                text: '第二级02'
+                            }
+                        ]
+                    },
+                    {
+                        type: 'bulleted-list',
+                        children: [
+                            {
+                                type: 'list-item',
+                                children: [
+                                    {
+                                        text: '第三级01'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                type: 'list-item',
+                children: [
+                    {
+                        text: '第一级02'
+                    }
+                ]
+            }
+        ]
     }
 ]
