@@ -51,6 +51,14 @@ export const initEditorValue = [
                 ]
             },
             {
+                type: 'list-item',
+                children: [
+                    {
+                        text: '第一级02'
+                    }
+                ]
+            },
+            {
                 type: 'bulleted-list',
                 children: [
                     {
@@ -60,27 +68,6 @@ export const initEditorValue = [
                                 text: '第二级01'
                             }
                         ]
-                    },
-                    {
-                        type: 'list-item',
-                        children: [
-                            {
-                                text: '第二级02'
-                            }
-                        ]
-                    },
-                    {
-                        type: 'bulleted-list',
-                        children: [
-                            {
-                                type: 'list-item',
-                                children: [
-                                    {
-                                        text: '第三级01'
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 ]
             },
@@ -88,7 +75,20 @@ export const initEditorValue = [
                 type: 'list-item',
                 children: [
                     {
-                        text: '第一级02'
+                        text: '第一级03'
+                    }
+                ]
+            },
+            {
+                type: 'bulleted-list',
+                children: [
+                    {
+                        type: 'list-item',
+                        children: [
+                            {
+                                text: '第二级02'
+                            }
+                        ]
                     }
                 ]
             }

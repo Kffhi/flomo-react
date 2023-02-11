@@ -47,6 +47,11 @@ const expect = `
 </ul>
 `
 
+// 判断是不是列表节点
+export const isListNodeEntry = (node: NodeEntry) => {
+    return node && ((node[0] as any).type === 'bulleted-list' || (node[0] as any).type === 'numbered-list')
+}
+
 interface newEditor extends Editor {
     handleTab: () => void
 }
@@ -95,6 +100,7 @@ export const withList = (editor: newEditor) => {
             // type Location = Path | Point | Range
             const selectionRange: Range = newEditor.selection as Range // 当前选中位置
             const nodes = Array.from(Editor.nodes<Node>(newEditor, { at: selectionRange })) // 获取所有的node
+            console.log('所有的node', nodes)
             // 使用一些奇技淫巧
             const l = nodes.length
             // 倒数第三个是当前node的父节点，type是"bulleted-list"或者"number-list"
@@ -113,23 +119,54 @@ export const withList = (editor: newEditor) => {
             // 处理逻辑参考最下方"在兄弟2处按下Tab之后的数据结构变化"
             if (curIndex > 0) {
                 const prevBrotherNode = brotherNodes[curIndex - 1]
+                const nextBrotherNode: NodeEntry = brotherNodes[curIndex + 1]
+
+                // 继承当前列表的类型
                 const listType = (pNode[0] as any).type ?? 'bulleted-list'
 
                 // TODO: 剩余问题
-                // 1.并不是简单粗暴的创建一个子节点塞进去就完事了，因为同级的list-item需要合并在同一个bulleted-list/numbered-list下。考虑是不是直接重新normalizeNode一下更好
+                // 1.并不是简单粗暴的创建一个子节点塞进去就完事了，因为同级的list-item需要合并在同一个bulleted-list/numbered-list下
                 // 2.被选中节点的子节点也需要同步处理，curNode里也是没有更深的子级的，因为数据结构上其实是有一个bulleted-list/numbered-list和当前的list-item同级...
                 // 3.deleteBackward需要处理多级列表的情况
                 // 4.鼠标光标问题
                 // 5.中文输入法已输入未选词状态下使用回车键有问题
 
+                // 构建新的节点对象
                 const newProperties: any = {
                     type: listType,
                     children: [cloneDeep(curNode[0])]
                 }
+
+                // 如果下一个兄弟节点是一个新的列表，那说明其实是当前节点的子节点，需要一起操作
+                if (isListNodeEntry(nextBrotherNode)) {
+                    // 把当前节点的子节点放入新的节点对象内
+                    newProperties.children.push(cloneDeep(nextBrotherNode[0]))
+                    // 移除当前子节点
+                    Transforms.removeNodes(newEditor, { at: nextBrotherNode[1] })
+                }
                 console.log('newProperties', newProperties)
-                Transforms.removeNodes(newEditor, { at: curNode[1] })
-                Transforms.insertNodes(newEditor, cloneDeep(newProperties), { at: curNode[1] })
-                Transforms.move(newEditor)
+
+                // 如果前一个兄弟节点已经是列表，那不用创建新的列表节点而是将当前的节点塞进前面的列表节点中
+                if (isListNodeEntry(prevBrotherNode)) {
+                    // 使用前一个兄弟节点构建新的目标节点
+                    const _newProperties: any = cloneDeep(prevBrotherNode[0])
+                    // 把已经构建的节点的children放进新的目标节点
+                    _newProperties.children = _newProperties.children?.concat(newProperties.children)
+
+                    // 移除当前节点和前一个兄弟节点
+                    Transforms.removeNodes(newEditor, { at: curNode[1] })
+                    Transforms.removeNodes(newEditor, { at: prevBrotherNode[1] })
+                    // 将新的目标节点对象放入当前节点
+                    Transforms.insertNodes(newEditor, cloneDeep(_newProperties), { at: prevBrotherNode[1] })
+                } else {
+                    // 移除当前节点
+                    Transforms.removeNodes(newEditor, { at: curNode[1] })
+                    // 将新的节点对象放入当前节点
+                    Transforms.insertNodes(newEditor, cloneDeep(newProperties), { at: curNode[1] })
+                }
+
+                // 处理鼠标光标
+                // Transforms.move(newEditor)
             }
         }
     }
