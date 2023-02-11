@@ -12,6 +12,9 @@
     },
     "dependencies": {
         "@reduxjs/toolkit": "^1.8.5",
+        "@sentry/react": "^7.37.1",
+        "@sentry/tracing": "^7.37.1",
+        "@sentry/vite-plugin": "^0.4.0",
         "antd": "^4.22.7",
         "axios": "^0.27.2",
         "classnames": "^2.3.1",
