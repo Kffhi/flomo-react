@@ -124,7 +124,7 @@ export const withList = (editor: newEditor) => {
                 // 继承当前列表的类型
                 const listType = (pNode[0] as any).type ?? 'bulleted-list'
 
-                // TODO: 剩余问题
+                // TODO: 问题
                 // 1.并不是简单粗暴的创建一个子节点塞进去就完事了，因为同级的list-item需要合并在同一个bulleted-list/numbered-list下
                 // 2.被选中节点的子节点也需要同步处理，curNode里也是没有更深的子级的，因为数据结构上其实是有一个bulleted-list/numbered-list和当前的list-item同级...
                 // 3.deleteBackward需要处理多级列表的情况
@@ -165,8 +165,8 @@ export const withList = (editor: newEditor) => {
                     Transforms.insertNodes(newEditor, cloneDeep(newProperties), { at: curNode[1] })
                 }
 
-                // 处理鼠标光标
-                // Transforms.move(newEditor)
+                // TODO: 处理鼠标光标
+                Transforms.move(newEditor, { unit: 'line' })
             }
         }
     }
