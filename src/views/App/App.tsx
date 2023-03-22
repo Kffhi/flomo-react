@@ -42,6 +42,7 @@ const App: React.FC = () => {
                     {layoutSymbol === 'Message' && (
                         <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
                             <h1>还没写好捏🐶</h1>
+                            <h3>项目地址，欢迎PR：https://github.com/Kffhi/flomo-react</h3>
                         </div>
                     )}
                 </div>
