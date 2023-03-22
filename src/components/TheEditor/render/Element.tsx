@@ -3,10 +3,12 @@ import { Transforms } from 'slate'
 import { ReactEditor, useSelected, useSlateStatic } from 'slate-react'
 import ClassNames from 'classnames'
 import { DeleteOutlined } from '@ant-design/icons'
+import { getBaseUrl } from '@/utils/axios'
 
 // 图片节点渲染
 const Image = (props: any) => {
     const { attributes, children, element } = props
+    const url = getBaseUrl(element?.url)
     const editor = useSlateStatic()
     const path = ReactEditor.findPath(editor as ReactEditor, element)
     const selected = useSelected()
@@ -21,7 +23,7 @@ const Image = (props: any) => {
         <div {...attributes}>
             {children}
             <div contentEditable={false} className={ClassNames('imageWrap')}>
-                <img src={element.url} className={ClassNames({ selected })} />
+                <img src={url} className={ClassNames({ selected })} />
                 <DeleteOutlined className={ClassNames('deleteIcon', { selected })} onClick={removeImgNode} />
             </div>
         </div>

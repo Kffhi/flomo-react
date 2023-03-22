@@ -32,8 +32,8 @@ const ImageBtn: React.FC<BtnType> = ({ content, format, type = 'mark' }) => {
         } = info
 
         if (status === 'done') {
-            const url = getBaseUrl(response?.data?.url)
-            insertImage(editor, url)
+            // const url = getBaseUrl(response?.data?.url)
+            insertImage(editor, response?.data?.url ?? '')
         }
     }
 
