@@ -49,3 +49,5 @@ export const initEditorValue = [
         ]
     }
 ]
+
+export const TOP_ID = '391a613c-dc90-454b-873f-22a227b178f0'

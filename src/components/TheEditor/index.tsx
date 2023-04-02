@@ -10,7 +10,7 @@ import ToolBar from './render/ToolBar'
 import TagSelect from './render/TagSelect'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { updateMemoEditStatus } from '@/store/reducers/memo'
-import { initEditorValue } from '@/utils/constants'
+import { initEditorValue, TOP_ID } from '@/utils/constants'
 import { setTagIsShow } from '@/store/reducers/editor'
 import { getCurNodeText, getLastStr, isBlockActive, LIST_TYPES, setListBlock, toggleBlock, toggleMark } from '@/components/TheEditor/plugin/format'
 import './style.less'
@@ -45,7 +45,8 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         type marksT = {
             [propName: string]: boolean
         } | null
-        const marks = Editor.marks(editor) as marksT // TODO： 实际上这里的类型应该是Omit<Text, 'text'>才对？可是Text里也没我定义的这些format的标识才对，正确应该怎么定义？
+        const marks = Editor.marks(editor) as marksT // TODO： 实际上这里的类型应该是Omit<Text,
+        // 'text'>才对？可是Text里也没我定义的这些format的标识才对，正确应该怎么定义？
         const isTag = marks?.tag ?? false
 
         // 如果当前标签选择框展示出来了，需要监听上下箭头（切换选中，默认选择第一个）或者回车（确认选中）
@@ -183,7 +184,8 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
         // @ts-ignore
         const isTag = Editor.marks(editor).tag
         if (lastStr === ' ' && isTag && needListenTagMark) {
-            // TODO: 但是这里有一个问题，当前面是空格，此时我按下#号，触发的顺序是先在上面onKeyDown里触发，标记为tag，触发value change，这里拿到的lastStr是空格。这就导致刚标记的tag又被remove了，这里应该拿用户输入的值才对，所以这里暂时用了一个needListenTagMark值临时解决一下
+            // TODO: 但是这里有一个问题，当前面是空格，此时我按下#号，触发的顺序是先在上面onKeyDown里触发，标记为tag，触发value
+            // change，这里拿到的lastStr是空格。这就导致刚标记的tag又被remove了，这里应该拿用户输入的值才对，所以这里暂时用了一个needListenTagMark值临时解决一下
             Editor.removeMark(editor, 'tag')
         }
 
@@ -222,7 +224,7 @@ const TheEditor: React.FC<propsType> = ({ initValue, readonly, memoId, handleSub
 
     // 双击进入编辑
     const handleDBClick = (event: MouseEvent) => {
-        if (readonly) {
+        if (readonly && memoId !== TOP_ID) {
             dispatch(updateMemoEditStatus({ id: memoId as string, isEdit: true }))
             ReactEditor.focus(editor)
         }

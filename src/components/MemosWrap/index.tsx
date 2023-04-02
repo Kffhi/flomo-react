@@ -5,7 +5,7 @@ import { Dropdown, Menu, message, Modal, Button } from 'antd'
 import dayjs from 'dayjs'
 import { Descendant } from 'slate'
 import { useAppSelector } from '@/store/hooks'
-import { MEMO_DROPDOWN_MENU } from '@/utils/constants'
+import { MEMO_DROPDOWN_MENU, TOP_ID } from '@/utils/constants'
 import TheEditor from '@/components/TheEditor'
 import { deleteMemo, editMemo } from '@/store/reducers/memo'
 import { useRefresh } from '@/hooks/useRefresh'
@@ -75,7 +75,7 @@ const MemosWrap: React.FC = () => {
     return (
         <div className={ClassNames('memosWrap')}>
             {memoList.map(memo => (
-                <div className={ClassNames('memoItemWrap', { readonly: !memo.isEdit })} key={memo.id}>
+                <div className={ClassNames('memoItemWrap', { readonly: !memo.isEdit }, { needShowTop: memo.id === TOP_ID })} key={memo.id}>
                     {!memo.isEdit && (
                         <div className={ClassNames('headerWrap')}>
                             <span>{dayjs(memo.createTime).format('YYYY年MM月DD日 HH:mm:ss')}</span>

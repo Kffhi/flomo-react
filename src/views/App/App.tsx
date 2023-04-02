@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import ClassNames from 'classnames'
+import { Divider } from 'antd'
 import { text } from 'stream/consumers'
 import SearchHeader from '@/components/SearchHeader'
 import HeaderEditor from '@/components/HeaderEditor'
@@ -40,9 +41,20 @@ const App: React.FC = () => {
                         </>
                     )}
                     {layoutSymbol === 'Message' && (
-                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <h1>还没写好捏🐶</h1>
-                            <h3>项目地址，欢迎PR：https://github.com/Kffhi/flomo-react</h3>
+                        <div
+                            style={{
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexWrap: 'wrap'
+                            }}
+                        >
+                            <div style={{ textAlign: 'center' }}>
+                                <h1>还没写好捏🐶</h1>
+                                <Divider />
+                                <h3>项目地址，欢迎PR：https://github.com/Kffhi/flomo-react</h3>
+                            </div>
                         </div>
                     )}
                 </div>
